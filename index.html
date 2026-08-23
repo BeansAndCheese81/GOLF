@@ -68,11 +68,33 @@
   .btn-secondary{background:var(--ivory-2);border-color:var(--border);color:var(--ink);}
   .btn-secondary:hover{border-color:var(--brass);}
 
-  .overlay.screen-home{background:linear-gradient(165deg, var(--sky) 0%, #cfe6ad 45%, var(--ivory-2) 100%);backdrop-filter:none;align-items:stretch;justify-content:space-between;text-align:left;gap:16px;padding:20px 24px 24px;}
-  .home-topbar{display:flex;justify-content:space-between;align-items:center;}
+  .overlay.screen-home{background:linear-gradient(165deg, var(--sky) 0%, #cfe6ad 45%, var(--ivory-2) 100%);backdrop-filter:none;text-align:left;padding:20px 24px 24px;overflow:hidden;}
+  .home-content{position:relative;z-index:1;height:100%;width:100%;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:11px;}
+  .home-scene{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .scene-sun{position:absolute;top:8%;right:14%;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle, rgba(255,247,214,.95), rgba(255,247,214,0) 70%);animation:sunPulse 4s ease-in-out infinite;}
+  @keyframes sunPulse{0%,100%{opacity:.75;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
+  .scene-cloud{position:absolute;background:rgba(255,255,255,.55);border-radius:999px;filter:blur(1px);animation:cloudDrift linear infinite;}
+  .scene-cloud.c1{width:90px;height:26px;top:12%;left:-30%;animation-duration:26s;}
+  .scene-cloud.c2{width:60px;height:18px;top:22%;left:-50%;animation-duration:19s;animation-delay:-6s;opacity:.7;}
+  .scene-cloud.c3{width:110px;height:30px;top:6%;left:-70%;animation-duration:32s;animation-delay:-14s;opacity:.5;}
+  @keyframes cloudDrift{from{transform:translateX(0);}to{transform:translateX(480px);}}
+  .scene-hill{position:absolute;bottom:-40%;border-radius:50%;}
+  .scene-hill.h1{left:-20%;width:140%;height:90%;background:#8fbf6a;}
+  .scene-hill.h2{left:10%;width:120%;height:70%;background:#79ad58;opacity:.85;}
+  .scene-flag{position:absolute;bottom:32%;left:20%;}
+  .flag-shadow{position:absolute;bottom:-3px;left:-6px;width:16px;height:5px;border-radius:50%;background:rgba(23,53,42,.2);}
+  .flag-cup{position:absolute;bottom:-2px;left:-4px;width:8px;height:4px;border-radius:50%;background:#17352a;}
+  .flag-pole{position:relative;width:2px;height:46px;background:#faf7ee;transform-origin:bottom center;}
+  .flag-cloth{position:absolute;top:0;left:2px;width:0;height:0;border-style:solid;border-width:7px 13px 7px 0;border-color:transparent var(--flag) transparent transparent;transform-origin:left center;animation:flagWave 1.6s ease-in-out infinite;}
+  @keyframes flagWave{0%,100%{transform:skewY(-6deg) scaleX(1);}50%{transform:skewY(4deg) scaleX(.92);}}
+  .scene-ball{position:absolute;bottom:calc(32% - 5px);left:calc(20% + 30px);width:9px;height:9px;border-radius:50%;background:#ffffff;box-shadow:0 1px 2px rgba(23,53,42,.4), inset -1px -1px 2px rgba(23,53,42,.15);animation:ballBounce 2.6s ease-in-out infinite;}
+  @keyframes ballBounce{0%,100%{transform:translateY(0);}30%{transform:translateY(-16px);}45%{transform:translateY(0);}55%{transform:translateY(-6px);}65%{transform:translateY(0);}}
+  .home-stats{display:flex;justify-content:space-between;gap:6px;background:rgba(250,247,238,.75);border:1px solid var(--border);border-radius:12px;padding:9px 6px;}
+  .home-stats .stat-pill .v{font-size:17px;}
+  .home-hero{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;}
+  .home-topbar{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
   .home-brand{font-family:'Anton',sans-serif;font-size:16px;display:flex;align-items:center;gap:7px;color:var(--fairway-deep);}
   .home-best{background:var(--ivory);border:1px solid var(--border);border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:700;color:var(--brass);}
-  .home-hero{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;}
   .home-hero-title{font-family:'Anton',sans-serif;font-size:48px;letter-spacing:.02em;line-height:.95;color:var(--fairway-deep);}
   .home-hero-sub{color:var(--dim);font-size:13px;font-weight:500;max-width:380px;line-height:1.5;}
   .home-actions{display:flex;flex-direction:column;gap:9px;align-items:center;margin-top:2px;min-width:220px;}
@@ -182,16 +204,33 @@
 
     <!-- HOME -->
     <div class="overlay screen-home" id="screenHome" style="display:flex;">
-      <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div class="home-best" id="homeBest">Best: —</div></div>
-      <div class="home-hero">
-        <div class="home-hero-title">CHAMPIONSHIP</div>
-        <div class="home-hero-sub">Three courses, seven clubs, real wind and lies. Pick your club, aim, then time a three-part swing. Read the break when you reach the green.</div>
+      <div class="home-scene" aria-hidden="true">
+        <div class="scene-sun"></div>
+        <div class="scene-cloud c1"></div>
+        <div class="scene-cloud c2"></div>
+        <div class="scene-cloud c3"></div>
+        <div class="scene-hill h1"></div>
+        <div class="scene-hill h2"></div>
+        <div class="scene-flag">
+          <div class="flag-shadow"></div>
+          <div class="flag-cup"></div>
+          <div class="flag-pole"><div class="flag-cloth"></div></div>
+        </div>
+        <div class="scene-ball"></div>
+      </div>
+      <div class="home-content">
+        <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div class="home-best" id="homeBest">Best: —</div></div>
+        <div class="home-hero">
+          <div class="home-hero-title">CHAMPIONSHIP</div>
+          <div class="home-hero-sub">Three courses, seven clubs, real wind and lies. Pick your club, aim, then time a three-part swing. Read the break when you reach the green.</div>
+        </div>
+        <div class="home-stats" id="homeStats"></div>
         <div class="home-actions">
-          <button class="btn btn-primary" id="btnPlay" style="width:100%;">Play Round</button>
+          <button class="btn btn-primary" id="btnPlay" style="width:100%;">Course Select</button>
           <button class="pill-btn" id="btnHowTo" style="width:100%;">How To Play</button>
         </div>
+        <div class="home-footer"><button class="pill-btn" id="btnSettingsHome">Settings</button><span style="font-size:10.5px;color:var(--dim);">v3.1</span></div>
       </div>
-      <div class="home-footer"><button class="pill-btn" id="btnSettingsHome">Settings</button><span style="font-size:10.5px;color:var(--dim);">v3.0</span></div>
     </div>
 
     <!-- COURSE SELECT -->
@@ -452,7 +491,7 @@ const COURSES = [
       { par:4, yards:410, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:5},{x:410,y:10}], fairwayWidth:26,
         green:{x:420,y:10,r:11}, bunkers:[{x:180,y:-25,r:9}], water:[], elevation:0, windBase:{speed:12,dir:250}, slope:{angle:80,strength:0.35} },
       { par:3, yards:195, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:195,y:0}], fairwayWidth:28,
-        green:{x:195,y:0,r:10}, bunkers:[{x:205,y:15,r:8}], water:[{x:130,y:-20,w:90,h:45}], elevation:3, windBase:{speed:15,dir:0}, slope:{angle:200,strength:0.40} },
+        green:{x:195,y:0,r:10}, bunkers:[{x:205,y:15,r:8}], water:[{x:95,y:-22,w:55,h:44}], elevation:3, windBase:{speed:15,dir:0}, slope:{angle:200,strength:0.40} },
       { par:4, yards:355, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:160,y:-30},{x:355,y:-10}], fairwayWidth:32,
         green:{x:365,y:-10,r:11}, bunkers:[{x:140,y:-55,r:9}], water:[], elevation:0, windBase:{speed:9,dir:150}, slope:{angle:10,strength:0.28} },
       { par:5, yards:545, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:230,y:15},{x:440,y:5},{x:545,y:0}], fairwayWidth:36,
@@ -544,8 +583,8 @@ function lieLabel(l){ return l === 'sand' ? 'bunker' : l; }
 /* ============================= PHYSICS CONSTANTS ============================= */
 const BALL_R_YD = 0.03, HOLE_R_YD = 0.06;
 const CAPTURE_SPEED = 0.55, PUTT_CAPTURE_SPEED = 0.22;
-const FRICTION = { fairway:0.975, rough:0.955, green:0.965, bunker:0.80, tee:0.975 };
-const SLOPE_ACCEL = 0.0028;
+const FRICTION = { fairway:0.975, rough:0.955, green:0.945, bunker:0.80, tee:0.975 };
+const SLOPE_ACCEL = 0.0020;
 const BOUNDARY_MARGIN = 45; // yards of playable buffer beyond hole geometry, ball is contained within it
 
 /* ============================= GAME STATE ============================= */
@@ -565,6 +604,15 @@ let stage = 'idle'; // club, power, accuracy, flight, roll, putt-aim, putt-roll,
 let bounds = null; // {minX,maxX,minY,maxY} in yards, for containing wild shots
 let particles = [], splashes = [];
 let sinkAnim = 0, sunkFlag = false;
+let careerStats = { rounds:0, aces:0, holesPlayed:0 };
+try { const cs = localStorage.getItem('holed2_career'); if (cs!==null) careerStats = JSON.parse(cs); } catch(e){}
+function saveCareerStats(){ try { localStorage.setItem('holed2_career', JSON.stringify(careerStats)); } catch(e){} }
+function buildHomeStats(){
+  const homeStats = document.getElementById('homeStats');
+  homeStats.innerHTML = statPill(careerStats.rounds,'Rounds')
+    + statPill(careerStats.aces,'Aces')
+    + statPill(careerStats.holesPlayed,'Holes Played');
+}
 let courseBests = {};
 try { const b = localStorage.getItem('holed2_bests'); if (b!==null) courseBests = JSON.parse(b); } catch(e){}
 function saveBest(courseId, rel){
@@ -580,6 +628,7 @@ function updateHomeBest(){
   homeBest.textContent = best===null ? 'Best: —' : ('Best: '+formatRelative(best));
 }
 updateHomeBest();
+buildHomeStats();
 function formatRelative(n){ return n===0 ? 'E' : (n>0 ? '+'+n : String(n)); }
 
 /* ============================= COURSE SELECT ============================= */
@@ -1021,7 +1070,7 @@ function computePuttVelocityFromDrag(startPx, curPx){
   const power = dist / MAX_PUTT_PULL_PX;
   const ang = Math.atan2(dy,dx);
   const ydPerPx = 1/camera.scale;
-  const speed = power * 0.55 * ydPerPx * 26; // calibrated putt speed
+  const speed = power * 0.55 * ydPerPx * 20; // calibrated putt speed
   return { vx: Math.cos(ang)*speed, vy: Math.sin(ang)*speed, power, ang };
 }
 // runs the exact same friction+slope physics as updatePuttRoll, but on a scratch copy of
@@ -1135,6 +1184,9 @@ function completeHole(){
   // so track a dedicated flag captured at the moment of the first roll settle instead (see fairwayHitFlag below).
   const gir = greenReachedAtStroke !== null && greenReachedAtStroke <= par - 2;
   statCard[currentHole] = { putts: puttsThisHole, fairwayHit: fairwayHitFlag, gir: par === 3 ? null : gir };
+  careerStats.holesPlayed++;
+  if (strokesThisHole === 1) careerStats.aces++;
+  saveCareerStats();
 
   const rel = strokesThisHole - par;
   const label = document.getElementById('holeResultLabel');
@@ -1164,6 +1216,9 @@ document.getElementById('btnNextHole').addEventListener('click', goNext);
 function goNext(){ if (currentHole===TOTAL_HOLES-1) finishRound(); else { loadHole(currentHole+1); showScreen(null); } }
 
 function finishRound(){
+  careerStats.rounds++;
+  saveCareerStats();
+  buildHomeStats();
   const totalPar = HOLES.reduce((s,h)=>s+h.par,0);
   const totalStrokes = scorecard.reduce((s,v)=>s+(v||0),0);
   const totalPutts = statCard.reduce((s,v)=>s+(v?v.putts:0),0);
@@ -1220,12 +1275,21 @@ function drawFairway(hole){
 function drawHazards(hole){
   for (const w of hole.water) {
     const p1 = toPx({x:w.x,y:w.y}), p2 = toPx({x:w.x+w.w,y:w.y+w.h});
+    const x = Math.min(p1.x,p2.x), y = Math.min(p1.y,p2.y);
+    const wPx = Math.abs(p2.x-p1.x), hPx = Math.abs(p2.y-p1.y);
+    const r = Math.min(wPx,hPx) * 0.42;
     ctx.save();
-    const grad = ctx.createLinearGradient(p1.x,p1.y,p1.x,p2.y);
+    roundRect(ctx, x, y, wPx, hPx, r);
+    const grad = ctx.createLinearGradient(x,y,x,y+hPx);
     grad.addColorStop(0,THEME.water[0]); grad.addColorStop(1,THEME.water[1]);
-    ctx.fillStyle = grad; ctx.fillRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
-    ctx.strokeStyle = THEME.waterEdge; ctx.lineWidth = 2;
-    ctx.strokeRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = THEME.waterEdge; ctx.lineWidth = 2; ctx.stroke();
+    // soft highlight so it reads as water, not a flat shape
+    ctx.save();
+    roundRect(ctx, x, y, wPx, hPx, r); ctx.clip();
+    ctx.globalAlpha = 0.22; ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.ellipse(x+wPx*0.32, y+hPx*0.28, wPx*0.3, hPx*0.14, -0.2, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
     ctx.restore();
   }
   for (const b of hole.bunkers) {

@@ -102,6 +102,24 @@
   .pill-btn{background:var(--ivory);border:1px solid var(--border);color:var(--ink);font-weight:600;font-size:12px;padding:9px 15px;border-radius:999px;cursor:pointer;}
   .pill-btn:hover{border-color:var(--brass);}
 
+  .profile-chip{display:flex;align-items:center;gap:10px;background:rgba(250,247,238,.85);border:1.5px solid var(--border);border-radius:14px;padding:9px 12px;cursor:pointer;position:relative;z-index:1;transition:border-color .15s ease, transform .1s ease;}
+  .profile-chip:hover{border-color:var(--brass);transform:translateY(-1px);}
+  .profile-avatar{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--brass);color:#3a2a06;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;}
+  .profile-info{flex:1;min-width:0;}
+  .profile-name{font-size:13px;font-weight:800;color:var(--fairway-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .profile-level-row{display:flex;align-items:center;gap:7px;margin-top:2px;}
+  .profile-level{font-size:9.5px;font-weight:700;color:var(--brass);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
+  .profile-xp-track{flex:1;height:5px;background:var(--ivory-2);border-radius:999px;overflow:hidden;}
+  .profile-xp-track.big{height:9px;}
+  .profile-xp-fill{height:100%;background:linear-gradient(90deg,var(--good),var(--brass));width:0%;transition:width .4s ease;}
+  .profile-name-input{width:100%;background:var(--ivory);border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-size:14px;font-weight:700;color:var(--ink);font-family:'Space Grotesk',sans-serif;}
+  .profile-name-input:focus{outline:none;border-color:var(--brass);}
+  .profile-level-block{display:flex;flex-direction:column;align-items:center;gap:7px;width:100%;max-width:300px;background:rgba(250,247,238,.7);border:1px solid var(--border);border-radius:12px;padding:14px;}
+  .profile-level-big{font-family:'Anton',sans-serif;font-size:22px;color:var(--fairway-deep);}
+  .profile-xp-label{font-size:10.5px;color:var(--dim);font-weight:600;}
+  .profile-levelup-flash{animation:levelUpFlash 1.1s ease;}
+  @keyframes levelUpFlash{0%{box-shadow:0 0 0 0 rgba(201,154,60,.7);}60%{box-shadow:0 0 0 14px rgba(201,154,60,0);}100%{box-shadow:0 0 0 0 rgba(201,154,60,0);}}
+
   .overlay-top{z-index:10;background:rgba(245,242,223,.97);backdrop-filter:blur(4px);}
   .howto-list{display:flex;flex-direction:column;gap:11px;text-align:left;max-width:340px;}
   .howto-row{display:flex;align-items:flex-start;gap:11px;font-size:12.5px;color:var(--ink);line-height:1.4;}
@@ -229,6 +247,16 @@
       </div>
       <div class="home-content">
         <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div class="home-best" id="homeBest">Best: —</div></div>
+        <div class="profile-chip" id="profileChip">
+          <div class="profile-avatar" id="profileAvatar">⛳</div>
+          <div class="profile-info">
+            <div class="profile-name" id="profileNameDisplay">Player</div>
+            <div class="profile-level-row">
+              <span class="profile-level" id="profileLevelDisplay">Lv 1</span>
+              <div class="profile-xp-track"><div class="profile-xp-fill" id="profileXpFill" style="width:0%;"></div></div>
+            </div>
+          </div>
+        </div>
         <div class="home-hero">
           <div class="home-hero-title">CHAMPIONSHIP</div>
           <div class="home-hero-sub">Three courses, seven clubs, real wind and lies. Pick your club, aim, then time a three-part swing. Read the break when you reach the green.</div>
@@ -270,6 +298,21 @@
         <div class="volume-row"><input type="range" id="volumeSlider" min="0" max="100" value="70"><span id="volumeValue">70%</span></div>
       </div>
       <div class="overlay-buttons"><button class="btn btn-primary" id="btnSettingsClose">Done</button></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="overlay overlay-top" id="screenProfile">
+      <div class="overlay-title" style="font-size:28px;">Profile</div>
+      <div class="settings-row"><span class="settings-label">Display Name</span>
+        <input type="text" id="profileNameInput" class="profile-name-input" maxlength="18" placeholder="Enter your name">
+      </div>
+      <div class="profile-level-block">
+        <div class="profile-level-big" id="profileLevelBig">Level 1</div>
+        <div class="profile-xp-track big"><div class="profile-xp-fill" id="profileXpFillBig" style="width:0%;"></div></div>
+        <div class="profile-xp-label" id="profileXpLabel">0 / 100 XP</div>
+      </div>
+      <div class="stat-row" id="profileStatRow"></div>
+      <div class="overlay-buttons"><button class="btn btn-primary" id="btnProfileClose">Done</button></div>
     </div>
 
     <!-- HOLE COMPLETE -->
@@ -365,12 +408,13 @@ const screens = {
   courseSelect: document.getElementById('screenCourseSelect'),
   howto: document.getElementById('screenHowTo'),
   settings: document.getElementById('screenSettings'),
+  profile: document.getElementById('screenProfile'),
   holeComplete: document.getElementById('screenHoleComplete'),
   courseComplete: document.getElementById('screenCourseComplete'),
 };
 const hud = document.querySelector('.hud');
 const shotbar = document.querySelector('.shotbar');
-const MENU_SCREENS = ['home','courseSelect','howto','settings'];
+const MENU_SCREENS = ['home','courseSelect','howto','settings','profile'];
 function showScreen(name){
   Object.values(screens).forEach(s => s.style.display = 'none');
   if (name && screens[name]) screens[name].style.display = 'flex';
@@ -665,72 +709,72 @@ const COURSES = [
     ],
   },
   {
-    id:'emerald', name:'Emerald Hollow', tagline:'Old-growth parkland — creeks, shade, and forgiving fairways.', theme: THEMES.emerald,
+    id:'emerald', name:'Emerald Hollow', tagline:'Tight old-growth parkland — creeks, doglegs, and a driveable closer.', theme: THEMES.emerald,
     holes: [
-      { par:4, yards:315, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:160,y:15},{x:315,y:-5}], fairwayWidth:30,
-        green:{x:325,y:-5,r:11}, bunkers:[{x:170,y:35,r:8}], water:[], elevation:0, windBase:{speed:6,dir:180}, slope:{angle:60,strength:0.15} },
-      { par:3, yards:150, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:150,y:10}], fairwayWidth:26,
-        green:{x:150,y:10,r:10}, bunkers:[{x:160,y:-10,r:7}], water:[{x:60,y:-15,w:50,h:40}], elevation:4, windBase:{speed:9,dir:300}, slope:{angle:140,strength:0.19} },
-      { par:5, yards:480, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:-20},{x:360,y:10},{x:480,y:0}], fairwayWidth:34,
-        green:{x:490,y:0,r:12}, bunkers:[{x:430,y:20,r:9}], water:[{x:250,y:-25,w:60,h:70}], elevation:-6, windBase:{speed:5,dir:80}, slope:{angle:250,strength:0.13} },
-      { par:4, yards:360, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:180,y:10},{x:360,y:-10}], fairwayWidth:28,
-        green:{x:370,y:-10,r:11}, bunkers:[{x:200,y:35,r:9}], water:[], elevation:0, windBase:{speed:8,dir:220}, slope:{angle:20,strength:0.16} },
-      { par:3, yards:175, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:175,y:5}], fairwayWidth:26,
-        green:{x:175,y:5,r:10}, bunkers:[{x:190,y:-15,r:8},{x:160,y:25,r:7}], water:[{x:80,y:-30,w:45,h:70}], elevation:8, windBase:{speed:11,dir:40}, slope:{angle:190,strength:0.21} },
-      { par:4, yards:340, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:150,y:-25},{x:340,y:-5}], fairwayWidth:32,
-        green:{x:350,y:-5,r:11}, bunkers:[{x:130,y:-50,r:9}], water:[], elevation:0, windBase:{speed:7,dir:160}, slope:{angle:350,strength:0.15} },
-      { par:5, yards:500, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:210,y:15},{x:400,y:-10},{x:500,y:5}], fairwayWidth:34,
-        green:{x:510,y:5,r:12}, bunkers:[{x:470,y:25,r:9},{x:450,y:-30,r:8}], water:[{x:300,y:-15,w:65,h:60}], elevation:-5, windBase:{speed:6,dir:70}, slope:{angle:280,strength:0.14} },
-      { par:3, yards:145, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:145,y:0}], fairwayWidth:26,
-        green:{x:145,y:0,r:9}, bunkers:[{x:155,y:15,r:7},{x:130,y:-18,r:6}], water:[], elevation:0, windBase:{speed:9,dir:200}, slope:{angle:100,strength:0.20} },
-      { par:4, yards:395, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:190,y:-10},{x:395,y:10}], fairwayWidth:30,
-        green:{x:405,y:10,r:11}, bunkers:[{x:200,y:-35,r:9}], water:[{x:375,y:26,w:70,h:50}], elevation:12, windBase:{speed:10,dir:260}, slope:{angle:220,strength:0.18} },
+      { par:4, yards:300, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:140,y:-35},{x:300,y:10}], fairwayWidth:24,
+        green:{x:310,y:10,r:10}, bunkers:[{x:160,y:-55,r:8}], water:[], elevation:0, windBase:{speed:5,dir:190}, slope:{angle:45,strength:0.14} },
+      { par:3, yards:140, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:140,y:15}], fairwayWidth:24,
+        green:{x:140,y:15,r:9}, bunkers:[{x:150,y:-8,r:6}], water:[{x:60,y:-10,w:40,h:45}], elevation:5, windBase:{speed:7,dir:270}, slope:{angle:200,strength:0.22} },
+      { par:4, yards:340, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:110,y:25},{x:230,y:-20},{x:340,y:5}], fairwayWidth:22,
+        green:{x:350,y:5,r:10}, bunkers:[{x:120,y:45,r:7}], water:[], elevation:0, windBase:{speed:6,dir:120}, slope:{angle:90,strength:0.16} },
+      { par:5, yards:470, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:180,y:20},{x:340,y:-10},{x:470,y:15}], fairwayWidth:30,
+        green:{x:480,y:15,r:12}, bunkers:[{x:400,y:-15,r:9}], water:[{x:150,y:25,w:220,h:20}], elevation:-3, windBase:{speed:4,dir:60}, slope:{angle:280,strength:0.12} },
+      { par:3, yards:155, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:155,y:-5}], fairwayWidth:24,
+        green:{x:155,y:-5,r:9}, bunkers:[{x:165,y:15,r:6}], water:[{x:70,y:-30,w:50,h:55}], elevation:8, windBase:{speed:8,dir:30}, slope:{angle:160,strength:0.20} },
+      { par:4, yards:355, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:120,y:-30},{x:240,y:20},{x:355,y:-10}], fairwayWidth:20,
+        green:{x:365,y:-10,r:9}, bunkers:[{x:130,y:-50,r:7},{x:250,y:40,r:7}], water:[], elevation:0, windBase:{speed:5,dir:200}, slope:{angle:330,strength:0.15} },
+      { par:3, yards:165, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:165,y:0}], fairwayWidth:24,
+        green:{x:165,y:0,r:9}, bunkers:[{x:175,y:-18,r:6},{x:150,y:20,r:6}], water:[], elevation:14, windBase:{speed:9,dir:80}, slope:{angle:100,strength:0.19} },
+      { par:5, yards:505, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:190,y:-25},{x:350,y:20},{x:505,y:-5}], fairwayWidth:32,
+        green:{x:515,y:-5,r:12}, bunkers:[{x:220,y:-45,r:9},{x:420,y:35,r:8}], water:[{x:280,y:0,w:70,h:55}], elevation:-8, windBase:{speed:4,dir:100}, slope:{angle:250,strength:0.13} },
+      { par:4, yards:285, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:140,y:10},{x:285,y:-5}], fairwayWidth:26,
+        green:{x:295,y:-5,r:10}, bunkers:[{x:150,y:30,r:7}], water:[{x:210,y:-25,w:50,h:45}], elevation:2, windBase:{speed:6,dir:220}, slope:{angle:40,strength:0.17} },
     ],
   },
   {
-    id:'redrock', name:'Redrock Mesa', tagline:'Canyon golf — dry washes, warm rock, and a stiff crosswind.', theme: THEMES.redrock,
+    id:'redrock', name:'Redrock Mesa', tagline:'Wide-open canyon bombing — big carries, bigger bunkers.', theme: THEMES.redrock,
     holes: [
-      { par:4, yards:370, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:180,y:-15},{x:370,y:10}], fairwayWidth:26,
-        green:{x:380,y:10,r:11}, bunkers:[{x:200,y:-45,r:10},{x:340,y:35,r:8}], water:[], elevation:3, windBase:{speed:13,dir:230}, slope:{angle:55,strength:0.17} },
-      { par:3, yards:160, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:160,y:-10}], fairwayWidth:24,
-        green:{x:160,y:-10,r:9}, bunkers:[{x:175,y:15,r:8},{x:145,y:-35,r:7}], water:[], elevation:10, windBase:{speed:15,dir:10}, slope:{angle:170,strength:0.21} },
-      { par:5, yards:545, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:230,y:20},{x:420,y:-15},{x:545,y:5}], fairwayWidth:32,
-        green:{x:555,y:5,r:12}, bunkers:[{x:260,y:50,r:10},{x:480,y:-40,r:9}], water:[{x:340,y:-10,w:65,h:55}], elevation:-8, windBase:{speed:9,dir:90}, slope:{angle:260,strength:0.15} },
-      { par:4, yards:405, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:10},{x:405,y:-10}], fairwayWidth:28,
-        green:{x:415,y:-10,r:11}, bunkers:[{x:220,y:35,r:9}], water:[], elevation:0, windBase:{speed:14,dir:250}, slope:{angle:15,strength:0.165} },
-      { par:3, yards:180, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:180,y:0}], fairwayWidth:24,
-        green:{x:180,y:0,r:9}, bunkers:[{x:195,y:-20,r:8},{x:160,y:22,r:7}], water:[], elevation:12, windBase:{speed:17,dir:50}, slope:{angle:200,strength:0.22} },
-      { par:5, yards:520, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:220,y:-25},{x:410,y:10},{x:520,y:-5}], fairwayWidth:32,
-        green:{x:530,y:-5,r:12}, bunkers:[{x:240,y:-55,r:10},{x:460,y:25,r:9}], water:[{x:300,y:-20,w:70,h:65}], elevation:-10, windBase:{speed:8,dir:110}, slope:{angle:290,strength:0.14} },
-      { par:4, yards:385, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:190,y:15},{x:385,y:-5}], fairwayWidth:26,
-        green:{x:395,y:-5,r:11}, bunkers:[{x:200,y:45,r:9},{x:340,y:-35,r:8}], water:[], elevation:0, windBase:{speed:16,dir:280}, slope:{angle:80,strength:0.175} },
-      { par:3, yards:150, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:150,y:5}], fairwayWidth:22,
-        green:{x:150,y:5,r:9}, bunkers:[{x:160,y:-18,r:7},{x:135,y:25,r:6}], water:[], elevation:6, windBase:{speed:18,dir:190}, slope:{angle:130,strength:0.23} },
-      { par:4, yards:420, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:210,y:-10},{x:420,y:10}], fairwayWidth:26,
-        green:{x:430,y:10,r:11}, bunkers:[{x:220,y:-40,r:9},{x:380,y:35,r:8}], water:[{x:400,y:26,w:70,h:50}], elevation:-4, windBase:{speed:12,dir:240}, slope:{angle:230,strength:0.16} },
+      { par:5, yards:560, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:280,y:10},{x:560,y:-5}], fairwayWidth:38,
+        green:{x:570,y:-5,r:13}, bunkers:[{x:300,y:55,r:14}], water:[], elevation:-15, windBase:{speed:14,dir:220}, slope:{angle:55,strength:0.15} },
+      { par:4, yards:440, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:220,y:0},{x:440,y:0}], fairwayWidth:34,
+        green:{x:450,y:0,r:12}, bunkers:[{x:220,y:-30,r:10},{x:220,y:32,r:10}], water:[], elevation:5, windBase:{speed:16,dir:180}, slope:{angle:15,strength:0.16} },
+      { par:4, yards:460, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:230,y:-45},{x:460,y:-15}], fairwayWidth:32,
+        green:{x:470,y:-15,r:12}, bunkers:[{x:250,y:-70,r:10}], water:[], elevation:-6, windBase:{speed:13,dir:250}, slope:{angle:190,strength:0.17} },
+      { par:3, yards:195, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:195,y:5}], fairwayWidth:28,
+        green:{x:195,y:5,r:10}, bunkers:[{x:210,y:-15,r:8}], water:[{x:80,y:-25,w:55,h:55}], elevation:18, windBase:{speed:18,dir:40}, slope:{angle:170,strength:0.23} },
+      { par:5, yards:585, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:300,y:-20},{x:585,y:10}], fairwayWidth:40,
+        green:{x:595,y:10,r:13}, bunkers:[{x:320,y:-55,r:12},{x:520,y:40,r:10}], water:[], elevation:-10, windBase:{speed:9,dir:90}, slope:{angle:280,strength:0.12} },
+      { par:4, yards:415, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:150,y:35},{x:415,y:-10}], fairwayWidth:30,
+        green:{x:425,y:-10,r:11}, bunkers:[{x:160,y:55,r:9}], water:[], elevation:3, windBase:{speed:15,dir:260}, slope:{angle:100,strength:0.18} },
+      { par:4, yards:380, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:380,y:0}], fairwayWidth:22,
+        green:{x:390,y:0,r:11}, bunkers:[{x:200,y:-45,r:16},{x:200,y:45,r:16}], water:[], elevation:0, windBase:{speed:17,dir:290}, slope:{angle:60,strength:0.19} },
+      { par:3, yards:170, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:170,y:-10}], fairwayWidth:26,
+        green:{x:170,y:-10,r:9}, bunkers:[{x:180,y:15,r:7}], water:[{x:75,y:-5,w:50,h:45}], elevation:8, windBase:{speed:19,dir:120}, slope:{angle:220,strength:0.21} },
+      { par:5, yards:545, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:220,y:25},{x:400,y:-30},{x:545,y:0}], fairwayWidth:34,
+        green:{x:555,y:0,r:14}, bunkers:[{x:240,y:50,r:10},{x:420,y:-55,r:10}], water:[], elevation:22, windBase:{speed:12,dir:200}, slope:{angle:300,strength:0.14} },
     ],
   },
   {
-    id:'frostpine', name:'Frostpine Highlands', tagline:'Winter links above the treeline — ice ponds, hard wind.', theme: THEMES.frostpine,
+    id:'frostpine', name:'Frostpine Highlands', tagline:'Open highland links — huge elevation, icy carries, wide greens.', theme: THEMES.frostpine,
     holes: [
-      { par:5, yards:500, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:210,y:-10},{x:380,y:20},{x:500,y:0}], fairwayWidth:34,
-        green:{x:510,y:0,r:12}, bunkers:[{x:230,y:-35,r:9}], water:[{x:300,y:5,w:60,h:60}], elevation:-14, windBase:{speed:12,dir:190}, slope:{angle:250,strength:0.15} },
-      { par:3, yards:165, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:165,y:-5}], fairwayWidth:26,
-        green:{x:165,y:-5,r:10}, bunkers:[{x:180,y:15,r:8}], water:[{x:70,y:-35,w:50,h:60}], elevation:18, windBase:{speed:16,dir:70}, slope:{angle:80,strength:0.22} },
-      { par:4, yards:350, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:170,y:20},{x:350,y:0}], fairwayWidth:30,
-        green:{x:360,y:0,r:11}, bunkers:[{x:190,y:45,r:9}], water:[], elevation:-8, windBase:{speed:14,dir:220}, slope:{angle:10,strength:0.16} },
-      { par:4, yards:400, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:-15},{x:400,y:5}], fairwayWidth:28,
-        green:{x:410,y:5,r:11}, bunkers:[{x:220,y:-40,r:9}], water:[{x:395,y:20,w:60,h:50}], elevation:20, windBase:{speed:13,dir:340}, slope:{angle:200,strength:0.17} },
-      { par:3, yards:145, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:145,y:10}], fairwayWidth:24,
-        green:{x:145,y:10,r:9}, bunkers:[{x:160,y:-12,r:7},{x:125,y:30,r:6}], water:[], elevation:10, windBase:{speed:19,dir:0}, slope:{angle:150,strength:0.24} },
-      { par:5, yards:530, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:220,y:15},{x:420,y:-20},{x:530,y:-5}], fairwayWidth:32,
-        green:{x:540,y:-5,r:12}, bunkers:[{x:250,y:40,r:10},{x:460,y:-45,r:9}], water:[{x:330,y:-10,w:65,h:55}], elevation:-16, windBase:{speed:10,dir:120}, slope:{angle:280,strength:0.14} },
-      { par:4, yards:375, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:190,y:-20},{x:375,y:0}], fairwayWidth:26,
-        green:{x:385,y:0,r:11}, bunkers:[{x:210,y:-50,r:9}], water:[], elevation:0, windBase:{speed:15,dir:260}, slope:{angle:60,strength:0.18} },
-      { par:3, yards:175, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:175,y:0}], fairwayWidth:24,
-        green:{x:175,y:0,r:9}, bunkers:[{x:190,y:20,r:7},{x:160,y:-22,r:7}], water:[{x:80,y:-25,w:50,h:50}], elevation:24, windBase:{speed:17,dir:80}, slope:{angle:190,strength:0.20} },
-      { par:4, yards:415, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:205,y:10},{x:415,y:-10}], fairwayWidth:26,
-        green:{x:425,y:-10,r:11}, bunkers:[{x:225,y:35,r:9},{x:380,y:-40,r:8}], water:[], elevation:-6, windBase:{speed:11,dir:200}, slope:{angle:220,strength:0.155} },
+      { par:4, yards:375, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:190,y:-15},{x:375,y:10}], fairwayWidth:34,
+        green:{x:385,y:10,r:13}, bunkers:[{x:200,y:-40,r:8}], water:[{x:250,y:-5,w:60,h:45}], elevation:-16, windBase:{speed:14,dir:190}, slope:{angle:240,strength:0.15} },
+      { par:5, yards:550, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:270,y:15},{x:550,y:-10}], fairwayWidth:36,
+        green:{x:560,y:-10,r:13}, bunkers:[], water:[{x:330,y:5,w:65,h:55}], elevation:-20, windBase:{speed:11,dir:150}, slope:{angle:270,strength:0.13} },
+      { par:3, yards:150, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:150,y:0}], fairwayWidth:30,
+        green:{x:150,y:0,r:11}, bunkers:[], water:[{x:70,y:-30,w:45,h:45}], elevation:12, windBase:{speed:17,dir:60}, slope:{angle:140,strength:0.22} },
+      { par:4, yards:400, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:30},{x:400,y:0}], fairwayWidth:32,
+        green:{x:410,y:0,r:12}, bunkers:[{x:220,y:50,r:9}], water:[], elevation:0, windBase:{speed:15,dir:280}, slope:{angle:90,strength:0.17} },
+      { par:4, yards:365, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:365,y:0}], fairwayWidth:34,
+        green:{x:375,y:0,r:12}, bunkers:[{x:390,y:20,r:10}], water:[], elevation:5, windBase:{speed:22,dir:180}, slope:{angle:200,strength:0.18} },
+      { par:3, yards:175, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:175,y:-10}], fairwayWidth:28,
+        green:{x:175,y:-10,r:10}, bunkers:[], water:[{x:60,y:-35,w:70,h:60}], elevation:20, windBase:{speed:19,dir:20}, slope:{angle:170,strength:0.24} },
+      { par:5, yards:560, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:220,y:-20},{x:420,y:25},{x:560,y:0}], fairwayWidth:34,
+        green:{x:570,y:0,r:13}, bunkers:[{x:240,y:-45,r:9},{x:440,y:45,r:8}], water:[], elevation:-24, windBase:{speed:10,dir:110}, slope:{angle:280,strength:0.13} },
+      { par:4, yards:395, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:200,y:-10},{x:395,y:10}], fairwayWidth:30,
+        green:{x:405,y:10,r:12}, bunkers:[{x:220,y:-35,r:8}], water:[{x:385,y:28,w:55,h:45}], elevation:8, windBase:{speed:13,dir:240}, slope:{angle:210,strength:0.16} },
+      { par:3, yards:160, tee:{x:0,y:0}, fairwayPts:[{x:0,y:0},{x:160,y:5}], fairwayWidth:26,
+        green:{x:160,y:5,r:9}, bunkers:[{x:170,y:-15,r:7},{x:145,y:25,r:6}], water:[], elevation:-4, windBase:{speed:20,dir:300}, slope:{angle:250,strength:0.19} },
     ],
   },
 ];
@@ -766,8 +810,8 @@ function determineLie(pt, hole){
 function lieLabel(l){ return l === 'sand' ? 'bunker' : l; }
 
 /* ============================= PHYSICS CONSTANTS ============================= */
-const BALL_R_YD = 0.03, HOLE_R_YD = 0.078;
-const CAPTURE_SPEED = 0.7, PUTT_CAPTURE_SPEED = 0.22;
+const BALL_R_YD = 0.03, HOLE_R_YD = 0.11;
+const CAPTURE_SPEED = 1.05, PUTT_CAPTURE_SPEED = 0.22;
 const FRICTION = { fairway:0.975, rough:0.955, green:0.945, bunker:0.80, tee:0.975 };
 const SLOPE_ACCEL = 0.0009;
 const BOUNDARY_MARGIN = 45; // yards of playable buffer beyond hole geometry, ball is contained within it
@@ -815,6 +859,66 @@ function updateHomeBest(){
 updateHomeBest();
 buildHomeStats();
 function formatRelative(n){ return n===0 ? 'E' : (n>0 ? '+'+n : String(n)); }
+
+/* ============================= PROFILE / XP ============================= */
+let playerProfile = { name:'Player', xp:0, level:1 };
+try { const p = localStorage.getItem('holed2_profile'); if (p!==null) playerProfile = Object.assign({name:'Player',xp:0,level:1}, JSON.parse(p)); } catch(e){}
+function saveProfile(){ try { localStorage.setItem('holed2_profile', JSON.stringify(playerProfile)); } catch(e){} }
+function xpForLevel(level){ return Math.round(100 + (level-1)*45); } // XP required to clear this level
+function awardXP(amount){
+  if (amount <= 0) return;
+  playerProfile.xp += amount;
+  let leveledUp = false;
+  while (playerProfile.xp >= xpForLevel(playerProfile.level)) {
+    playerProfile.xp -= xpForLevel(playerProfile.level);
+    playerProfile.level++;
+    leveledUp = true;
+  }
+  saveProfile();
+  updateProfileUI();
+  if (leveledUp) flashLevelUp();
+}
+function flashLevelUp(){
+  const chip = document.getElementById('profileChip');
+  if (!chip) return;
+  chip.classList.remove('profile-levelup-flash');
+  void chip.offsetWidth; // restart the CSS animation even if it just played
+  chip.classList.add('profile-levelup-flash');
+}
+function updateProfileUI(){
+  const need = xpForLevel(playerProfile.level);
+  const pct = Math.max(0, Math.min(100, Math.round((playerProfile.xp/need)*100)));
+  const name = (playerProfile.name || 'Player').trim() || 'Player';
+  const nameDisplay = document.getElementById('profileNameDisplay');
+  const levelDisplay = document.getElementById('profileLevelDisplay');
+  const xpFill = document.getElementById('profileXpFill');
+  const avatar = document.getElementById('profileAvatar');
+  if (nameDisplay) nameDisplay.textContent = name;
+  if (levelDisplay) levelDisplay.textContent = 'Lv '+playerProfile.level;
+  if (xpFill) xpFill.style.width = pct+'%';
+  if (avatar) avatar.textContent = name.charAt(0).toUpperCase() || '⛳';
+
+  const levelBig = document.getElementById('profileLevelBig');
+  const xpFillBig = document.getElementById('profileXpFillBig');
+  const xpLabel = document.getElementById('profileXpLabel');
+  if (levelBig) levelBig.textContent = 'Level '+playerProfile.level;
+  if (xpFillBig) xpFillBig.style.width = pct+'%';
+  if (xpLabel) xpLabel.textContent = playerProfile.xp+' / '+need+' XP';
+
+  const statRow = document.getElementById('profileStatRow');
+  if (statRow) statRow.innerHTML = statPill(careerStats.rounds,'Rounds') + statPill(careerStats.aces,'Aces') + statPill(careerStats.holesPlayed,'Holes');
+}
+updateProfileUI();
+// XP awarded per hole, scaled by how the score came in relative to par
+function xpForHoleResult(strokes, par){
+  const rel = strokes - par;
+  if (strokes === 1) return 150;      // hole in one
+  if (rel <= -2) return 60;           // eagle or better
+  if (rel === -1) return 35;          // birdie
+  if (rel === 0) return 18;           // par
+  if (rel === 1) return 10;           // bogey
+  return 5;                            // double bogey or worse — still something for finishing the hole
+}
 
 /* ============================= COURSE SELECT ============================= */
 const courseList = document.getElementById('courseList');
@@ -1447,6 +1551,8 @@ function completeHole(){
   careerStats.holesPlayed++;
   if (strokesThisHole === 1) careerStats.aces++;
   saveCareerStats();
+  const xpGained = xpForHoleResult(strokesThisHole, par);
+  awardXP(xpGained);
 
   const rel = strokesThisHole - par;
   const label = document.getElementById('holeResultLabel');
@@ -1465,6 +1571,7 @@ function completeHole(){
   statRow.innerHTML += statPill(puttsThisHole, 'Putts');
   if (par !== 3) statRow.innerHTML += statPill(fairwayHitFlag===null?'—':(fairwayHitFlag?'Yes':'No'), 'Fairway');
   statRow.innerHTML += statPill(statCard[currentHole].gir===null?'—':(statCard[currentHole].gir?'Yes':'No'), 'Green in Reg');
+  statRow.innerHTML += statPill('+'+xpGained, 'XP');
 
   document.getElementById('btnNextHole').textContent = currentHole===TOTAL_HOLES-1 ? 'See Scorecard' : 'Next Hole';
   showScreen('holeComplete');
@@ -1481,16 +1588,18 @@ function finishRound(){
   buildHomeStats();
   const totalPar = HOLES.reduce((s,h)=>s+h.par,0);
   const totalStrokes = scorecard.reduce((s,v)=>s+(v||0),0);
+  const rel = totalStrokes - totalPar;
+  const roundBonus = Math.max(20, 60 - rel*4); // finishing under par earns a bigger bonus
+  awardXP(roundBonus);
   const totalPutts = statCard.reduce((s,v)=>s+(v?v.putts:0),0);
   const girCount = statCard.filter(v=>v && v.gir===true).length;
   const girEligible = statCard.filter(v=>v && v.gir!==null).length;
   const fwCount = statCard.filter(v=>v && v.fairwayHit===true).length;
   const fwEligible = statCard.filter(v=>v && v.fairwayHit!==null).length;
-  const rel = totalStrokes - totalPar;
   document.getElementById('finalScoreLabel').textContent = formatRelative(rel);
   document.getElementById('finalStrokesLabel').textContent = totalStrokes+' total strokes';
   const finalStatRow = document.getElementById('finalStatRow');
-  finalStatRow.innerHTML = statPill(totalPutts,'Putts') + statPill(fwEligible?fwCount+'/'+fwEligible:'—','Fairways') + statPill(girEligible?girCount+'/'+girEligible:'—','GIR');
+  finalStatRow.innerHTML = statPill(totalPutts,'Putts') + statPill(fwEligible?fwCount+'/'+fwEligible:'—','Fairways') + statPill(girEligible?girCount+'/'+girEligible:'—','GIR') + statPill('+'+roundBonus,'Bonus XP');
   for (let i=0;i<TOTAL_HOLES;i++){
     document.getElementById('scPar'+(i+1)).textContent = HOLES[i].par;
     const cell = document.getElementById('scYou'+(i+1));
@@ -1782,6 +1891,21 @@ document.getElementById('btnHowToClose').addEventListener('click', () => showScr
 document.getElementById('btnSettings').addEventListener('click', () => { settingsReturnTo = null; showScreen('settings'); });
 document.getElementById('btnSettingsHome').addEventListener('click', () => { settingsReturnTo = 'home'; showScreen('settings'); });
 document.getElementById('btnSettingsClose').addEventListener('click', () => showScreen(settingsReturnTo));
+document.getElementById('profileChip').addEventListener('click', () => {
+  document.getElementById('profileNameInput').value = playerProfile.name === 'Player' ? '' : playerProfile.name;
+  showScreen('profile');
+  setTimeout(() => document.getElementById('profileNameInput').focus(), 50);
+});
+document.getElementById('btnProfileClose').addEventListener('click', () => {
+  const typed = document.getElementById('profileNameInput').value.trim();
+  playerProfile.name = typed || 'Player';
+  saveProfile();
+  updateProfileUI();
+  showScreen('home');
+});
+document.getElementById('profileNameInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('btnProfileClose').click();
+});
 document.getElementById('btnRestartHole').addEventListener('click', restartHole);
 document.getElementById('btnPlayAgain').addEventListener('click', () => { buildCourseSelect(); showScreen('courseSelect'); });
 document.getElementById('btnCourseHome').addEventListener('click', () => showScreen('home'));

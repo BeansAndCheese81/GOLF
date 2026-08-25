@@ -34,8 +34,19 @@
   .hud-actions{display:flex;gap:6px;}
   .icon-btn{background:var(--ivory-2);border:1px solid var(--border);color:var(--ink);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
   .icon-btn:hover{border-color:var(--brass);}
-  .restart-btn{background:var(--ivory-2);border:1px solid var(--border);color:var(--ink);font-weight:600;font-size:11px;padding:7px 12px;border-radius:8px;cursor:pointer;}
-  .restart-btn:hover{border-color:var(--brass);}
+  .shop-btn-hud{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--brass),#e0b555);border:none;color:#2a1b04;font-weight:800;font-size:12.5px;padding:7px 8px 7px 12px;border-radius:999px;cursor:pointer;box-shadow:0 3px 10px rgba(201,154,60,.45);animation:shopPulse 2.4s ease-in-out infinite;}
+  .shop-btn-hud:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(201,154,60,.55);}
+  .shop-btn-hud .sbh-icon{font-size:15px;}
+  .shop-btn-hud .sbh-coins{background:rgba(255,255,255,.55);padding:3px 9px;font-size:10.5px;}
+  @keyframes shopPulse{0%,100%{box-shadow:0 3px 10px rgba(201,154,60,.45);}50%{box-shadow:0 3px 18px rgba(201,154,60,.8);}}
+  .shop-btn-hero{width:100%;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#c99a3c,#e8bd63,#c99a3c);background-size:200% 200%;border:none;border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 6px 20px rgba(201,154,60,.4);animation:shopHeroShimmer 3.5s ease-in-out infinite;}
+  .shop-btn-hero:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(201,154,60,.5);}
+  .shop-btn-hero .sbhero-icon{font-size:26px;flex-shrink:0;}
+  .shop-btn-hero .sbhero-text{display:flex;flex-direction:column;align-items:flex-start;flex:1;text-align:left;}
+  .shop-btn-hero .sbhero-title{font-family:'Anton',sans-serif;font-size:15px;color:#2a1b04;letter-spacing:.01em;}
+  .shop-btn-hero .sbhero-sub{font-size:10px;color:#5a3f10;font-weight:700;}
+  .shop-btn-hero .coin-balance{background:rgba(255,255,255,.6);flex-shrink:0;}
+  @keyframes shopHeroShimmer{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
 
   .shotbar{width:100%;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;background:var(--ivory-2);border:1px solid var(--border);border-radius:10px;padding:5px 16px;font-size:11.5px;color:var(--dim);font-weight:600;}
   .shotbar b{color:var(--ink);font-weight:700;}
@@ -235,7 +246,7 @@
     <div class="hud-actions">
       <button class="icon-btn" id="btnMenu" title="Menu">⌂</button>
       <button class="icon-btn" id="btnSettings" title="Settings">⚙</button>
-      <button class="restart-btn" id="btnRestartHole">Redo Hole</button>
+      <button class="shop-btn-hud" id="btnShopHud"><span class="sbh-icon">🛒</span><span class="sbh-label">Shop</span><span class="coin-balance sbh-coins" id="hudCoinBalance">🪙 0</span></button>
     </div>
   </div>
 
@@ -284,7 +295,7 @@
         <div class="scene-ball"></div>
       </div>
       <div class="home-content">
-        <div class="home-topbar"><div class="home-brand" id="homeBrand">⛳ HOLED: CHAMPIONSHIP</div><div style="display:flex;gap:8px;align-items:center;"><div class="coin-balance" id="homeCoinBalance">🪙 0</div><div class="home-best" id="homeBest">Best: —</div></div></div>
+        <div class="home-topbar"><div class="home-brand" id="homeBrand">⛳ HOLED: CHAMPIONSHIP</div><div class="home-best" id="homeBest">Best: —</div></div>
         <div class="profile-chip" id="profileChip">
           <div class="profile-avatar" id="profileAvatar">⛳</div>
           <div class="profile-info">
@@ -302,9 +313,10 @@
         <div class="home-stats" id="homeStats"></div>
         <div class="home-actions">
           <button class="btn btn-primary" id="btnPlay" style="width:100%;">Course Select</button>
+          <button class="shop-btn-hero" id="btnShopHome"><span class="sbhero-icon">🛒</span><span class="sbhero-text"><span class="sbhero-title">Visit the Shop</span><span class="sbhero-sub">Consumables, balls, shafts &amp; grips</span></span><span class="coin-balance" id="homeCoinBalance2">🪙 0</span></button>
           <button class="pill-btn" id="btnHowTo" style="width:100%;">How To Play</button>
         </div>
-        <div class="home-footer"><div style="display:flex;gap:8px;"><button class="pill-btn" id="btnSettingsHome">Settings</button><button class="pill-btn" id="btnShopHome">🛒 Shop</button></div><span style="font-size:10.5px;color:var(--dim);">v3.2</span></div>
+        <div class="home-footer"><button class="pill-btn" id="btnSettingsHome">Settings</button><span style="font-size:10.5px;color:var(--dim);">v3.3</span></div>
       </div>
     </div>
 
@@ -438,11 +450,11 @@
   <div class="controls" id="controlsHint">
     <span><kbd>Drag</kbd> aim on course / drag putt</span>
     <span><kbd>Tap</kbd> lock power &amp; strike</span>
-    <span><kbd>R</kbd> redo hole</span>
   </div>
 </div>
 
 <script>
+
 
 
 /* ============================= SETUP ============================= */
@@ -1881,7 +1893,7 @@ window.addEventListener('mouseup', onUp);
 canvas.addEventListener('touchstart', onDown, {passive:false});
 canvas.addEventListener('touchmove', onMove, {passive:false});
 window.addEventListener('touchend', onUp);
-window.addEventListener('keydown', (e) => { if (e.key==='r'||e.key==='R') restartHole(); });
+
 
 
 /* ============================= PARTICLES ============================= */
@@ -1982,7 +1994,6 @@ function finishRound(){
   saveBest(COURSES[currentCourseIndex].id, rel);
   showScreen('courseComplete');
 }
-function restartHole(){ if (screens.home.style.display==='flex') return; loadHole(currentHole); showScreen(null); }
 function startRound(){
   scorecard = new Array(TOTAL_HOLES).fill(null); statCard = new Array(TOTAL_HOLES).fill(null);
   previewChargesLeft = PREVIEW_CHARGES_PER_ROUND + consumeBankedPreviewBonus(); updatePreviewBtnLabel();
@@ -2339,8 +2350,8 @@ document.querySelectorAll('.shop-tab').forEach(tab => {
   });
 });
 document.getElementById('btnShopHome').addEventListener('click', () => { shopReturnTo = 'home'; buildShop(); showScreen('shop'); });
+document.getElementById('btnShopHud').addEventListener('click', () => { shopReturnTo = null; buildShop(); showScreen('shop'); });
 document.getElementById('btnShopBack').addEventListener('click', () => showScreen(shopReturnTo));
-document.getElementById('btnRestartHole').addEventListener('click', restartHole);
 document.getElementById('btnPlayAgain').addEventListener('click', () => { buildCourseSelect(); showScreen('courseSelect'); });
 document.getElementById('btnCourseHome').addEventListener('click', () => showScreen('home'));
 
@@ -2420,6 +2431,7 @@ document.getElementById('devResetProgress').addEventListener('click', () => {
 loadHole(0);
 showScreen('home');
 requestAnimationFrame(loop);
+
 
 
 

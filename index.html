@@ -46,6 +46,8 @@
   .lie-sand{background:rgba(227,195,127,.35);color:#8a6a25;}
   .lie-green{background:rgba(63,159,202,.16);color:var(--water);}
   .wind-chip{display:flex;align-items:center;gap:5px;}
+  .shaft-chip{padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.02em;background:rgba(201,154,60,.16);color:#8a6a25;}
+  .shaft-chip.control{background:rgba(63,159,202,.16);color:#26688a;}
 
   .stage{position:relative;display:inline-block;max-width:100%;flex:1 1 auto;min-height:0;}
   canvas{display:block;border-radius:16px;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 145px);box-shadow:0 20px 50px rgba(23,53,42,.18), 0 0 0 1px var(--border);touch-action:none;cursor:crosshair;}
@@ -139,6 +141,30 @@
   .course-tagline{font-size:11px;color:var(--dim);font-weight:500;line-height:1.3;margin-top:1px;}
   .course-meta{display:flex;gap:9px;margin-top:4px;font-size:10px;color:var(--brass);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 
+  .coin-balance{background:var(--panel);border:1.5px solid var(--border);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:800;color:#8a6a25;white-space:nowrap;}
+  .shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:460px;overflow-y:auto;padding:2px;}
+  .shop-tabs{display:flex;gap:8px;margin-bottom:2px;}
+  .shop-tab{background:var(--ivory-2);border:1.5px solid var(--border);color:var(--dim);font-weight:700;font-size:11.5px;padding:7px 16px;border-radius:999px;cursor:pointer;}
+  .shop-tab.active{background:var(--brass);border-color:var(--brass);color:#2a1b04;}
+  .shop-card{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:left;position:relative;}
+  .shop-card .icon{font-size:26px;line-height:1;}
+  .shop-card .name{font-family:'Anton',sans-serif;font-size:13.5px;color:var(--fairway-deep);letter-spacing:.01em;}
+  .shop-card .desc{font-size:10.5px;color:var(--dim);font-weight:500;line-height:1.35;flex:1;}
+  .shop-card .swatch{width:26px;height:26px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(23,53,42,.15), 0 2px 4px rgba(23,53,42,.2);}
+  .shop-buy{background:var(--brass);color:#2a1b04;border:none;border-radius:8px;padding:8px 10px;font-weight:800;font-size:11.5px;cursor:pointer;text-align:center;}
+  .shop-buy:hover{background:#d9ab4c;}
+  .shop-buy.owned{background:var(--ivory-2);color:var(--dim);cursor:default;}
+  .shop-buy.equipped{background:var(--good);color:#f4fbf3;cursor:default;}
+  .shop-buy.cant-afford{background:var(--ivory-2);color:var(--bad);cursor:not-allowed;}
+  .shop-owned-count{position:absolute;top:8px;right:8px;background:var(--fairway-deep);color:#fff;font-size:9.5px;font-weight:800;border-radius:999px;padding:2px 7px;}
+
+  .inv-tray{position:absolute;right:14px;top:14px;display:none;flex-direction:column;gap:6px;z-index:4;}
+  .inv-btn{display:flex;align-items:center;gap:7px;background:rgba(245,242,223,.96);border:1.5px solid var(--border);border-radius:999px;padding:7px 13px 7px 10px;cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 6px 18px rgba(23,53,42,.14);transition:border-color .15s ease, transform .1s ease;}
+  .inv-btn:hover{border-color:var(--brass);transform:translateY(-1px);}
+  .inv-btn .ic{font-size:15px;}
+  .inv-btn .nm{font-size:11px;font-weight:800;color:var(--ink);}
+  .inv-btn .ct{font-size:9.5px;font-weight:700;color:var(--dim);background:var(--ivory-2);border-radius:999px;padding:1px 6px;}
+
   .scorecard{width:100%;max-width:460px;border-collapse:collapse;font-size:11.5px;}
   .scorecard th{color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:9px;padding:4px 3px;border-bottom:1px solid var(--border);}
   .scorecard td{padding:5px 3px;text-align:center;border-bottom:1px solid var(--border);font-weight:600;}
@@ -180,7 +206,7 @@
   .meter-needle{position:absolute;top:-6px;bottom:-6px;width:4px;background:var(--fairway-deep);box-shadow:0 0 6px rgba(23,53,42,.5);left:50%;border-radius:2px;}
   .meterpanel .mtap{font-size:10.5px;color:var(--dim);font-weight:600;}
 
-  .shotbanner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;font-family:'Anton',sans-serif;font-size:34px;color:var(--fairway-deep);text-shadow:0 3px 14px rgba(245,242,223,.9), 0 1px 0 rgba(245,242,223,.9);display:none;pointer-events:none;text-align:center;}
+  .shotbanner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:11;font-family:'Anton',sans-serif;font-size:34px;color:var(--fairway-deep);text-shadow:0 3px 14px rgba(245,242,223,.9), 0 1px 0 rgba(245,242,223,.9);display:none;pointer-events:none;text-align:center;}
   .shotbanner .sub{display:block;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--ink);font-weight:600;margin-top:4px;}
 
   .controls{flex:0 0 auto;color:var(--dim);font-size:10px;font-weight:500;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;text-align:center;}
@@ -207,6 +233,7 @@
     <span id="shotYardage">Yardage: —</span>
     <span class="lie-tag lie-tee" id="shotLie">TEE</span>
     <span class="wind-chip" id="shotWind">Wind: —</span>
+    <span class="shaft-chip" id="shotShaft" style="display:none;"></span>
   </div>
 
   <div class="stage">
@@ -215,6 +242,7 @@
     <div class="clubbar" id="clubBar"></div>
     <div class="aimhint" id="aimHint"><span>👉 Drag on the course to aim</span><button class="swingbtn" id="btnSwing">Swing ▸</button></div>
     <div class="putthint" id="puttHint"><span id="puttHintText">👉 Drag back from the ball, then release to putt</span><span class="putt-dist" id="puttDistText"></span></div>
+    <div class="inv-tray" id="invTray"></div>
     <div class="lag-badge" id="lagBadge">🎯 LAG PUTT — extra forgiving</div>
     <button class="preview-btn" id="btnPreview">👁 Read Putt (3)</button>
     <button class="ff-btn" id="btnFastForward">⏩ Hold to Speed Up</button>
@@ -246,7 +274,7 @@
         <div class="scene-ball"></div>
       </div>
       <div class="home-content">
-        <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div class="home-best" id="homeBest">Best: —</div></div>
+        <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div style="display:flex;gap:8px;align-items:center;"><div class="coin-balance" id="homeCoinBalance">🪙 0</div><div class="home-best" id="homeBest">Best: —</div></div></div>
         <div class="profile-chip" id="profileChip">
           <div class="profile-avatar" id="profileAvatar">⛳</div>
           <div class="profile-info">
@@ -266,7 +294,7 @@
           <button class="btn btn-primary" id="btnPlay" style="width:100%;">Course Select</button>
           <button class="pill-btn" id="btnHowTo" style="width:100%;">How To Play</button>
         </div>
-        <div class="home-footer"><button class="pill-btn" id="btnSettingsHome">Settings</button><span style="font-size:10.5px;color:var(--dim);">v3.1</span></div>
+        <div class="home-footer"><div style="display:flex;gap:8px;"><button class="pill-btn" id="btnSettingsHome">Settings</button><button class="pill-btn" id="btnShopHome">🛒 Shop</button></div><span style="font-size:10.5px;color:var(--dim);">v3.2</span></div>
       </div>
     </div>
 
@@ -315,6 +343,19 @@
       <div class="overlay-buttons"><button class="btn btn-primary" id="btnProfileClose">Done</button></div>
     </div>
 
+    <!-- SHOP -->
+    <div class="overlay overlay-top" id="screenShop">
+      <div class="overlay-title" style="font-size:28px;">Shop</div>
+      <div class="coin-balance" id="shopCoinBalance">🪙 0</div>
+      <div class="shop-tabs">
+        <button class="shop-tab active" id="tabConsumables" data-tab="consumable">Consumables</button>
+        <button class="shop-tab" id="tabBalls" data-tab="ball">Ball Skins</button>
+        <button class="shop-tab" id="tabShafts" data-tab="shaft">Club Parts</button>
+      </div>
+      <div class="shop-grid" id="shopGrid"></div>
+      <div class="overlay-buttons"><button class="btn btn-secondary" id="btnShopBack">Back</button></div>
+    </div>
+
     <!-- HOLE COMPLETE -->
     <div class="overlay" id="screenHoleComplete">
       <div class="overlay-result" id="holeResultLabel">PAR</div>
@@ -349,6 +390,7 @@
 
 <script>
 
+
 /* ============================= SETUP ============================= */
 const canvas = document.getElementById('course');
 const ctx = canvas.getContext('2d');
@@ -368,11 +410,11 @@ const TAP_IN_RADIUS_YD = 0.5;       // gimme range — a real golfer doesn't mis
 const LAG_PUTT_THRESHOLD_YD = 9;    // beyond this, lag-putt assist kicks in
 const LAG_ASSIST_BLEND = 0.16;      // how strongly assist nudges toward the ideal line/speed
 const PREVIEW_CHARGES_PER_ROUND = 3;
-const puttHint = document.getElementById('puttHint');
-const puttHintText = document.getElementById('puttHintText');
+const puttHint = document.getElementById('puttHint');const puttHintText = document.getElementById('puttHintText');
 const puttDistText = document.getElementById('puttDistText');
 const lagBadge = document.getElementById('lagBadge');
 const previewBtn = document.getElementById('btnPreview');
+const invTray = document.getElementById('invTray');
 let previewChargesLeft = PREVIEW_CHARGES_PER_ROUND;
 let previewArmed = false;
 let lagPuttActive = false;
@@ -409,12 +451,13 @@ const screens = {
   howto: document.getElementById('screenHowTo'),
   settings: document.getElementById('screenSettings'),
   profile: document.getElementById('screenProfile'),
+  shop: document.getElementById('screenShop'),
   holeComplete: document.getElementById('screenHoleComplete'),
   courseComplete: document.getElementById('screenCourseComplete'),
 };
 const hud = document.querySelector('.hud');
 const shotbar = document.querySelector('.shotbar');
-const MENU_SCREENS = ['home','courseSelect','howto','settings','profile'];
+const MENU_SCREENS = ['home','courseSelect','howto','settings','profile','shop'];
 function showScreen(name){
   Object.values(screens).forEach(s => s.style.display = 'none');
   if (name && screens[name]) screens[name].style.display = 'flex';
@@ -556,7 +599,8 @@ const LIE_MOD = { tee:1.0, fairway:1.0, rough:0.85 };
 
 function computeApproachShot({ club, powerPct, missAmount, aimAngleDeg, lie, wind, holeYards, elevationYd }){
   const c = clubById(club);
-  let dist = c.dist * (powerPct/100);
+  const shaft = equippedShaftStats();
+  let dist = c.dist * (powerPct/100) * shaft.powerMult;
   let effMiss = missAmount;
   if (lie === 'bunker' && club !== 'SW' && club !== 'PW') {
     effMiss = Math.max(-1, Math.min(1, missAmount + (missAmount >= 0 ? 0.35 : -0.35)));
@@ -565,14 +609,15 @@ function computeApproachShot({ club, powerPct, missAmount, aimAngleDeg, lie, win
   const lieMod = lie === 'bunker' ? sandModifier(club) : (LIE_MOD[lie] ?? 0.85);
   dist *= lieMod;
   const roughAmp = lie === 'rough' ? 1.4 : 1.0;
-  const curveDeg = effMiss * c.curve * roughAmp;
+  const curveDeg = effMiss * c.curve * roughAmp * shaft.curveMult;
   const finalAngleDeg = aimAngleDeg + curveDeg;
   const finalAngleRad = finalAngleDeg * Math.PI/180;
   const windRad = wind.dir * Math.PI/180;
+  const windSensEff = c.windSens * shaft.windMult;
   const along = Math.cos(windRad - finalAngleRad) * wind.speed;
   const cross = Math.sin(windRad - finalAngleRad) * wind.speed;
-  dist += along * 0.55 * c.windSens;
-  const lateralDrift = cross * 0.35 * c.windSens;
+  dist += along * 0.55 * windSensEff;
+  const lateralDrift = cross * 0.35 * windSensEff;
   dist -= elevationYd * (dist / holeYards);
   dist = Math.max(5, dist);
   const rollYards = dist * c.roll * (lie === 'bunker' ? 0.3 : 1.0);
@@ -819,6 +864,55 @@ const BOUNDARY_MARGIN = 45; // yards of playable buffer beyond hole geometry, ba
 /* ============================= GAME STATE ============================= */
 let currentHole = 0;
 let strokesThisHole = 0, puttsThisHole = 0, firstShotLie = null, greenReachedAtStroke = null;
+let shotHistory = [];
+function pushShotSnapshot(){
+  shotHistory.push({ x: ball.x, y: ball.y, strokesThisHole, puttsThisHole, currentLie, greenReachedAtStroke, fairwayHitFlag });
+  if (shotHistory.length > 5) shotHistory.shift(); // only ever need the last one or two
+}
+function useMulligan(){
+  if (invCount('mulligan') <= 0 || shotHistory.length === 0) return false;
+  const snap = shotHistory.pop();
+  playerProfile.inventory.mulligan--;
+  saveProfile();
+  ball.x = snap.x; ball.y = snap.y; ball.vx = 0; ball.vy = 0;
+  strokesThisHole = snap.strokesThisHole; puttsThisHole = snap.puttsThisHole;
+  currentLie = snap.currentLie; greenReachedAtStroke = snap.greenReachedAtStroke;
+  fairwayHitFlag = snap.fairwayHitFlag;
+  updateHud();
+  flashBanner('MULLIGAN!', 'pure');
+  if (currentLie === 'green') enterPuttStage(); else enterClubStage();
+  updateInventoryTray();
+  return true;
+}
+function useCalmWind(){
+  if (invCount('calm_wind') <= 0) return false;
+  playerProfile.inventory.calm_wind--;
+  saveProfile();
+  wind.speed = 0;
+  updateShotBar();
+  flashBanner('CALM WIND', 'pure');
+  updateInventoryTray();
+  return true;
+}
+function updateInventoryTray(){
+  const items = [];
+  if (invCount('mulligan') > 0 && shotHistory.length > 0) items.push('mulligan');
+  if (invCount('calm_wind') > 0 && wind.speed > 0.5) items.push('calm_wind');
+  invTray.innerHTML = '';
+  if (items.length === 0) { invTray.style.display = 'none'; return; }
+  invTray.style.display = 'flex';
+  for (const id of items) {
+    const item = shopItemById(id);
+    const btn = document.createElement('button');
+    btn.className = 'inv-btn';
+    btn.innerHTML = '<span class="ic">'+item.icon+'</span><span class="nm">'+item.name+'</span><span class="ct">x'+invCount(id)+'</span>';
+    btn.addEventListener('click', () => {
+      if (id === 'mulligan') useMulligan();
+      else if (id === 'calm_wind') useCalmWind();
+    });
+    invTray.appendChild(btn);
+  }
+}
 let scorecard = new Array(TOTAL_HOLES).fill(null);
 let statCard = new Array(TOTAL_HOLES).fill(null); // {putts, fairwayHit, gir}
 let ball = { x:0, y:0, vx:0, vy:0 };
@@ -861,8 +955,8 @@ buildHomeStats();
 function formatRelative(n){ return n===0 ? 'E' : (n>0 ? '+'+n : String(n)); }
 
 /* ============================= PROFILE / XP ============================= */
-let playerProfile = { name:'Player', xp:0, level:1 };
-try { const p = localStorage.getItem('holed2_profile'); if (p!==null) playerProfile = Object.assign({name:'Player',xp:0,level:1}, JSON.parse(p)); } catch(e){}
+let playerProfile = { name:'Player', xp:0, level:1, coins:0, inventory:{}, equippedBall:'classic', equippedShaft:'regular' };
+try { const p = localStorage.getItem('holed2_profile'); if (p!==null) playerProfile = Object.assign({name:'Player',xp:0,level:1,coins:0,inventory:{},equippedBall:'classic',equippedShaft:'regular'}, JSON.parse(p)); } catch(e){}
 function saveProfile(){ try { localStorage.setItem('holed2_profile', JSON.stringify(playerProfile)); } catch(e){} }
 function xpForLevel(level){ return Math.round(100 + (level-1)*45); } // XP required to clear this level
 function awardXP(amount){
@@ -907,6 +1001,9 @@ function updateProfileUI(){
 
   const statRow = document.getElementById('profileStatRow');
   if (statRow) statRow.innerHTML = statPill(careerStats.rounds,'Rounds') + statPill(careerStats.aces,'Aces') + statPill(careerStats.holesPlayed,'Holes');
+
+  const coinDisplays = document.querySelectorAll('.coin-balance');
+  coinDisplays.forEach(el => { el.textContent = '🪙 '+playerProfile.coins; });
 }
 updateProfileUI();
 // XP awarded per hole, scaled by how the score came in relative to par
@@ -918,6 +1015,97 @@ function xpForHoleResult(strokes, par){
   if (rel === 0) return 18;           // par
   if (rel === 1) return 10;           // bogey
   return 5;                            // double bogey or worse — still something for finishing the hole
+}
+// coins awarded per hole, on a smaller scale than XP so the shop has real weight
+function coinsForHoleResult(strokes, par){
+  const rel = strokes - par;
+  if (strokes === 1) return 50;
+  if (rel <= -2) return 20;
+  if (rel === -1) return 10;
+  if (rel === 0) return 4;
+  if (rel === 1) return 1;
+  return 0;
+}
+function awardCoins(amount){
+  if (amount <= 0) return;
+  playerProfile.coins += amount;
+  saveProfile();
+  updateProfileUI();
+}
+
+/* ============================= SHOP ============================= */
+const SHOP_ITEMS = [
+  { id:'mulligan', name:'Mulligan', icon:'🔄', price:35, type:'consumable',
+    desc:'Instantly retry your last stroke — undo it and hit again, no penalty.' },
+  { id:'caddie_notes', name:'Caddie Notes', icon:'📖', price:25, type:'consumable',
+    desc:'+1 free Read Putt charge, banked for your next round.' },
+  { id:'calm_wind', name:'Calm Wind', icon:'🍃', price:30, type:'consumable',
+    desc:'Kills the wind for the rest of the current hole.' },
+  { id:'ball_sunset', name:'Sunset Ball', icon:'🟠', price:80, type:'ball', color:'#ff8a3d',
+    desc:'A warm orange finish. Purely for style.' },
+  { id:'ball_azure', name:'Azure Ball', icon:'🔵', price:80, type:'ball', color:'#3f9fca',
+    desc:'Cool blue — easy to spot sitting in the rough.' },
+  { id:'ball_gold', name:'Champion Gold', icon:'🟡', price:150, type:'ball', color:'#dcae5c',
+    desc:'A gilded ball for a proven champion.' },
+  { id:'shaft_stiff', name:'Stiff Shaft', icon:'🎯', price:90, type:'shaft', powerMult:1.08, curveMult:1.30, windMult:1.0,
+    desc:'+8% distance on every club. Mishits curve noticeably more.' },
+  { id:'shaft_xstiff', name:'Extra Stiff Shaft', icon:'💪', price:170, type:'shaft', powerMult:1.15, curveMult:1.60, windMult:1.0,
+    desc:'+15% distance — a serious power gain. Brutally unforgiving on a bad strike.' },
+  { id:'shaft_senior', name:'Senior Flex', icon:'🪶', price:90, type:'shaft', powerMult:0.92, curveMult:0.70, windMult:1.0,
+    desc:'Trades 8% distance for a much straighter miss. Great for taming a big curve.' },
+  { id:'shaft_lowspin', name:'Low-Spin Tour Shaft', icon:'🌬️', price:130, type:'shaft', powerMult:1.0, curveMult:1.15, windMult:0.70,
+    desc:'Flies under the wind — 30% less wind drift, at a small accuracy cost.' },
+];
+function shopItemById(id){ return SHOP_ITEMS.find(i => i.id === id); }
+function invCount(id){ return (playerProfile.inventory && playerProfile.inventory[id]) || 0; }
+function ownsBall(id){ return id === 'classic' || invCount(id) > 0; }
+function ownsShaft(id){ return id === 'regular' || invCount(id) > 0; }
+function ballColor(id){
+  if (id === 'classic' || !id) return '#ffffff';
+  const item = shopItemById(id);
+  return item ? item.color : '#ffffff';
+}
+function equippedShaftStats(){
+  const id = playerProfile.equippedShaft || 'regular';
+  if (id === 'regular') return { id:'regular', name:'Regular Flex', powerMult:1, curveMult:1, windMult:1 };
+  const item = shopItemById(id);
+  return item ? { id, name:item.name, powerMult:item.powerMult, curveMult:item.curveMult, windMult:item.windMult }
+               : { id:'regular', name:'Regular Flex', powerMult:1, curveMult:1, windMult:1 };
+}
+function buyItem(id){
+  const item = shopItemById(id);
+  if (!item) return false;
+  if ((item.type === 'ball' && ownsBall(id)) || (item.type === 'shaft' && ownsShaft(id))) return false; // already owned, nothing to buy
+  if (playerProfile.coins < item.price) return false;
+  playerProfile.coins -= item.price;
+  playerProfile.inventory[id] = (playerProfile.inventory[id] || 0) + 1;
+  if (item.type === 'ball') playerProfile.equippedBall = id; // auto-equip a newly bought skin
+  if (item.type === 'shaft') playerProfile.equippedShaft = id; // auto-equip a newly bought shaft
+  saveProfile();
+  updateProfileUI();
+  updateShotBar();
+  buildShop();
+  return true;
+}
+function equipBall(id){
+  if (!ownsBall(id)) return;
+  playerProfile.equippedBall = id;
+  saveProfile();
+  buildShop();
+}
+function equipShaft(id){
+  if (!ownsShaft(id)) return;
+  playerProfile.equippedShaft = id;
+  saveProfile();
+  buildShop();
+  updateShotBar();
+}
+// pending bonus preview charges bought as Caddie Notes, applied the next time a round starts
+function bankedPreviewBonus(){ return invCount('caddie_notes'); }
+function consumeBankedPreviewBonus(){
+  const n = invCount('caddie_notes');
+  if (n > 0) { playerProfile.inventory.caddie_notes = 0; saveProfile(); }
+  return n;
 }
 
 /* ============================= COURSE SELECT ============================= */
@@ -1033,6 +1221,7 @@ function loadHole(i){
   const h = HOLES[i];
   strokesThisHole = 0; puttsThisHole = 0; firstShotLie = null; greenReachedAtStroke = null;
   fairwayHitFlag = null;
+  shotHistory = [];
   ball.x = h.tee.x; ball.y = h.tee.y; ball.vx = 0; ball.vy = 0;
   currentLie = 'tee';
   particles = []; splashes = []; sinkAnim = 0; sunkFlag = false;
@@ -1073,6 +1262,15 @@ function updateShotBar(){
   shotLie.textContent = lieLabel(currentLie).toUpperCase();
   const arrow = windArrowChar(wind.dir);
   shotWind.innerHTML = 'Wind: <b>'+Math.round(wind.speed)+' mph '+arrow+'</b>';
+  const shaft = equippedShaftStats();
+  const shotShaft = document.getElementById('shotShaft');
+  if (shaft.id === 'regular') {
+    shotShaft.style.display = 'none';
+  } else {
+    shotShaft.style.display = 'inline-flex';
+    shotShaft.className = 'shaft-chip' + (shaft.powerMult < 1 || shaft.windMult < 1 ? ' control' : '');
+    shotShaft.textContent = '🏌 ' + shaft.name;
+  }
 }
 function windArrowChar(deg){
   const arrows = ['→','↘','↓','↙','←','↖','↑','↗'];
@@ -1098,6 +1296,7 @@ function enterClubStage(){
   meterPanel.style.display = 'none';
   puttHint.style.display = 'none'; previewBtn.style.display = 'none'; lagBadge.style.display = 'none';
   aimAngleDeg = angleToPin();
+  updateInventoryTray();
 }
 function buildClubBar(){
   const h = HOLES[currentHole];
@@ -1117,6 +1316,7 @@ function enterPowerStage(){
   stage = 'power';
   clubBar.style.display = 'none';
   aimHint.style.display = 'none';
+  invTray.style.display = 'none';
   meterPanel.style.display = 'flex';
   meterLabel.textContent = 'Tap to set power';
   meterSweet.style.display = 'none';
@@ -1156,6 +1356,7 @@ function enterPuttStage(){
     puttHint.style.display = 'none';
     previewBtn.style.display = 'none';
     lagBadge.style.display = 'none';
+    invTray.style.display = 'none';
     strokesThisHole++; puttsThisHole++; updateHud();
     flashBanner('TAP IN!', 'pure');
     soundClick();
@@ -1171,6 +1372,7 @@ function enterPuttStage(){
   lagBadge.style.display = lagPuttActive ? 'block' : 'none';
   puttHint.style.display = 'flex';
   previewBtn.style.display = previewChargesLeft > 0 ? 'flex' : 'none';
+  updateInventoryTray();
 }
 
 document.getElementById('btnSwing').addEventListener('click', () => { if (stage==='club') enterPowerStage(); });
@@ -1216,6 +1418,7 @@ function executeApproachShot(){
   const h = HOLES[currentHole];
   const isTeeShot = strokesThisHole === 0;
   if (isTeeShot) firstShotLie = 'tee';
+  pushShotSnapshot();
   const shot = computeApproachShot({
     club: selectedClub, powerPct: pendingPower, missAmount: pendingMiss,
     aimAngleDeg, lie: currentLie, wind, holeYards: h.yards, elevationYd: h.elevation,
@@ -1395,6 +1598,7 @@ function handleSunk(){
   soundSink(strokesThisHole === 1);
   clubBar.style.display = 'none'; aimHint.style.display = 'none'; meterPanel.style.display = 'none';
   puttHint.style.display = 'none'; previewBtn.style.display = 'none'; lagBadge.style.display = 'none';
+  invTray.style.display = 'none';
   stage = 'sunk';
   setTimeout(() => completeHole(), 420);
 }
@@ -1497,6 +1701,7 @@ function onUp(evt){
     const v = computePuttVelocityFromDrag(dragStartPx, dragCurPx);
     dragging = false;
     if (!v) { puttHint.style.display = 'flex'; if (!previewArmed) previewBtn.style.display = previewChargesLeft>0 ? 'flex' : 'none'; return; }
+    pushShotSnapshot();
     ball.vx = v.vx; ball.vy = v.vy;
     strokesThisHole++; puttsThisHole++; updateHud();
     soundClick();
@@ -1553,6 +1758,8 @@ function completeHole(){
   saveCareerStats();
   const xpGained = xpForHoleResult(strokesThisHole, par);
   awardXP(xpGained);
+  const coinsGained = coinsForHoleResult(strokesThisHole, par);
+  awardCoins(coinsGained);
 
   const rel = strokesThisHole - par;
   const label = document.getElementById('holeResultLabel');
@@ -1572,6 +1779,7 @@ function completeHole(){
   if (par !== 3) statRow.innerHTML += statPill(fairwayHitFlag===null?'—':(fairwayHitFlag?'Yes':'No'), 'Fairway');
   statRow.innerHTML += statPill(statCard[currentHole].gir===null?'—':(statCard[currentHole].gir?'Yes':'No'), 'Green in Reg');
   statRow.innerHTML += statPill('+'+xpGained, 'XP');
+  if (coinsGained > 0) statRow.innerHTML += statPill('+'+coinsGained, 'Coins');
 
   document.getElementById('btnNextHole').textContent = currentHole===TOTAL_HOLES-1 ? 'See Scorecard' : 'Next Hole';
   showScreen('holeComplete');
@@ -1591,6 +1799,8 @@ function finishRound(){
   const rel = totalStrokes - totalPar;
   const roundBonus = Math.max(20, 60 - rel*4); // finishing under par earns a bigger bonus
   awardXP(roundBonus);
+  const coinBonus = Math.max(8, 25 - rel*2);
+  awardCoins(coinBonus);
   const totalPutts = statCard.reduce((s,v)=>s+(v?v.putts:0),0);
   const girCount = statCard.filter(v=>v && v.gir===true).length;
   const girEligible = statCard.filter(v=>v && v.gir!==null).length;
@@ -1599,7 +1809,7 @@ function finishRound(){
   document.getElementById('finalScoreLabel').textContent = formatRelative(rel);
   document.getElementById('finalStrokesLabel').textContent = totalStrokes+' total strokes';
   const finalStatRow = document.getElementById('finalStatRow');
-  finalStatRow.innerHTML = statPill(totalPutts,'Putts') + statPill(fwEligible?fwCount+'/'+fwEligible:'—','Fairways') + statPill(girEligible?girCount+'/'+girEligible:'—','GIR') + statPill('+'+roundBonus,'Bonus XP');
+  finalStatRow.innerHTML = statPill(totalPutts,'Putts') + statPill(fwEligible?fwCount+'/'+fwEligible:'—','Fairways') + statPill(girEligible?girCount+'/'+girEligible:'—','GIR') + statPill('+'+roundBonus,'Bonus XP') + statPill('+'+coinBonus,'Bonus Coins');
   for (let i=0;i<TOTAL_HOLES;i++){
     document.getElementById('scPar'+(i+1)).textContent = HOLES[i].par;
     const cell = document.getElementById('scYou'+(i+1));
@@ -1613,7 +1823,8 @@ function finishRound(){
 function restartHole(){ if (screens.home.style.display==='flex') return; loadHole(currentHole); showScreen(null); }
 function startRound(){
   scorecard = new Array(TOTAL_HOLES).fill(null); statCard = new Array(TOTAL_HOLES).fill(null);
-  previewChargesLeft = PREVIEW_CHARGES_PER_ROUND; updatePreviewBtnLabel();
+  previewChargesLeft = PREVIEW_CHARGES_PER_ROUND + consumeBankedPreviewBonus(); updatePreviewBtnLabel();
+  shotHistory = [];
   loadHole(0); showScreen(null);
 }
 
@@ -1751,7 +1962,7 @@ function drawBall(){
   ctx.globalAlpha = alpha;
   ctx.translate(p.x, p.y - liftPx);
   ctx.scale(scale, scale);
-  ctx.fillStyle = '#ffffff'; ctx.strokeStyle = 'rgba(23,53,42,.35)'; ctx.lineWidth = 1;
+  ctx.fillStyle = ballColor(playerProfile.equippedBall); ctx.strokeStyle = 'rgba(23,53,42,.35)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(0,0, Math.max(4, BALL_R_YD*camera.scale)+(liftPx>1?2:0), 0, Math.PI*2); ctx.fill(); ctx.stroke();
   ctx.restore();
 }
@@ -1858,15 +2069,17 @@ function loop(now){
   if (stage !== 'putt-roll' && fastForwardBtn.style.display !== 'none') {
     fastForwardBtn.style.display = 'none'; fastForward = false; fastForwardBtn.classList.remove('active');
   }
-  if (stage === 'power' || stage === 'accuracy') updateMeters(now);
-  if (stage === 'flight' && flight) updateFlight(now);
-  else if (stage === 'roll') updateRoll();
-  else if (stage === 'putt-roll') {
-    const steps = fastForward ? 6 : 1;
-    for (let i=0; i<steps && stage==='putt-roll'; i++) updatePuttRoll();
+  if (!anyMenuOpen()) {
+    if (stage === 'power' || stage === 'accuracy') updateMeters(now);
+    if (stage === 'flight' && flight) updateFlight(now);
+    else if (stage === 'roll') updateRoll();
+    else if (stage === 'putt-roll') {
+      const steps = fastForward ? 6 : 1;
+      for (let i=0; i<steps && stage==='putt-roll'; i++) updatePuttRoll();
+    }
+    updateCamera(now);
+    updateParticles();
   }
-  updateCamera(now);
-  updateParticles();
   render();
   requestAnimationFrame(loop);
 }
@@ -1906,6 +2119,61 @@ document.getElementById('btnProfileClose').addEventListener('click', () => {
 document.getElementById('profileNameInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('btnProfileClose').click();
 });
+let shopReturnTo = 'home';
+let shopActiveTab = 'consumable';
+function buildShop(){
+  document.getElementById('shopCoinBalance').textContent = '🪙 ' + playerProfile.coins;
+  const grid = document.getElementById('shopGrid');
+  grid.innerHTML = '';
+  const items = SHOP_ITEMS.filter(i => i.type === shopActiveTab);
+  for (const item of items) {
+    const card = document.createElement('div');
+    card.className = 'shop-card';
+    const owned = invCount(item.id);
+    let visual = '<div class="icon">'+item.icon+'</div>';
+    if (item.type === 'ball') visual = '<div class="swatch" style="background:'+item.color+';"></div>';
+    let btnHtml;
+    if (item.type === 'ball') {
+      if (playerProfile.equippedBall === item.id) btnHtml = '<div class="shop-buy equipped">Equipped</div>';
+      else if (ownsBall(item.id)) btnHtml = '<button class="shop-buy owned" data-action="equip" data-id="'+item.id+'">Equip</button>';
+      else btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
+    } else if (item.type === 'shaft') {
+      if (playerProfile.equippedShaft === item.id) btnHtml = '<div class="shop-buy equipped">Equipped</div>';
+      else if (ownsShaft(item.id)) btnHtml = '<button class="shop-buy owned" data-action="equip" data-id="'+item.id+'">Equip</button>';
+      else btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
+    } else {
+      btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
+    }
+    card.innerHTML = visual
+      + '<div class="name">'+item.name+'</div>'
+      + '<div class="desc">'+item.desc+'</div>'
+      + btnHtml
+      + (item.type==='consumable' && owned>0 ? '<div class="shop-owned-count">x'+owned+'</div>' : '');
+    grid.appendChild(card);
+  }
+}
+document.getElementById('shopGrid').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  if (btn.dataset.action === 'buy') {
+    if (playerProfile.coins < shopItemById(id).price) { flashBanner("CAN'T AFFORD", 'poor'); return; }
+    if (buyItem(id)) { soundClick(); flashBanner('PURCHASED!', 'pure'); }
+  } else if (btn.dataset.action === 'equip') {
+    const item = shopItemById(id);
+    if (item && item.type === 'shaft') equipShaft(id); else equipBall(id);
+    soundClick();
+  }
+});
+document.querySelectorAll('.shop-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    shopActiveTab = tab.dataset.tab;
+    document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t === tab));
+    buildShop();
+  });
+});
+document.getElementById('btnShopHome').addEventListener('click', () => { shopReturnTo = 'home'; buildShop(); showScreen('shop'); });
+document.getElementById('btnShopBack').addEventListener('click', () => showScreen(shopReturnTo));
 document.getElementById('btnRestartHole').addEventListener('click', restartHole);
 document.getElementById('btnPlayAgain').addEventListener('click', () => { buildCourseSelect(); showScreen('courseSelect'); });
 document.getElementById('btnCourseHome').addEventListener('click', () => showScreen('home'));
@@ -1913,6 +2181,7 @@ document.getElementById('btnCourseHome').addEventListener('click', () => showScr
 loadHole(0);
 showScreen('home');
 requestAnimationFrame(loop);
+
 
 
 </script>

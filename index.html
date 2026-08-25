@@ -146,6 +146,16 @@
   .shop-tabs{display:flex;gap:8px;margin-bottom:2px;}
   .shop-tab{background:var(--ivory-2);border:1.5px solid var(--border);color:var(--dim);font-weight:700;font-size:11.5px;padding:7px 16px;border-radius:999px;cursor:pointer;}
   .shop-tab.active{background:var(--brass);border-color:var(--brass);color:#2a1b04;}
+
+  .dev-section{width:100%;max-width:380px;display:flex;flex-direction:column;gap:8px;background:rgba(23,53,42,.05);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:left;}
+  .dev-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);}
+  .dev-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .dev-btn{background:var(--ivory-2);border:1.5px solid var(--border);color:var(--ink);font-weight:700;font-size:11.5px;padding:8px 12px;border-radius:8px;cursor:pointer;}
+  .dev-btn:hover{border-color:var(--brass);}
+  .dev-btn.danger{background:rgba(193,68,58,.12);border-color:var(--flag);color:#8a2e26;}
+  .dev-btn.danger:hover{background:rgba(193,68,58,.22);}
+  .dev-label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;font-weight:700;color:var(--ink);}
+  .dev-label input[type=range]{width:100%;accent-color:var(--brass);}
   .shop-card{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:left;position:relative;}
   .shop-card .icon{font-size:26px;line-height:1;}
   .shop-card .name{font-family:'Anton',sans-serif;font-size:13.5px;color:var(--fairway-deep);letter-spacing:.01em;}
@@ -274,7 +284,7 @@
         <div class="scene-ball"></div>
       </div>
       <div class="home-content">
-        <div class="home-topbar"><div class="home-brand">⛳ HOLED: CHAMPIONSHIP</div><div style="display:flex;gap:8px;align-items:center;"><div class="coin-balance" id="homeCoinBalance">🪙 0</div><div class="home-best" id="homeBest">Best: —</div></div></div>
+        <div class="home-topbar"><div class="home-brand" id="homeBrand">⛳ HOLED: CHAMPIONSHIP</div><div style="display:flex;gap:8px;align-items:center;"><div class="coin-balance" id="homeCoinBalance">🪙 0</div><div class="home-best" id="homeBest">Best: —</div></div></div>
         <div class="profile-chip" id="profileChip">
           <div class="profile-avatar" id="profileAvatar">⛳</div>
           <div class="profile-info">
@@ -350,10 +360,54 @@
       <div class="shop-tabs">
         <button class="shop-tab active" id="tabConsumables" data-tab="consumable">Consumables</button>
         <button class="shop-tab" id="tabBalls" data-tab="ball">Ball Skins</button>
-        <button class="shop-tab" id="tabShafts" data-tab="shaft">Club Parts</button>
+        <button class="shop-tab" id="tabShafts" data-tab="shaft">Shafts</button>
+        <button class="shop-tab" id="tabGrips" data-tab="grip">Grips</button>
       </div>
       <div class="shop-grid" id="shopGrid"></div>
       <div class="overlay-buttons"><button class="btn btn-secondary" id="btnShopBack">Back</button></div>
+    </div>
+
+    <!-- DEV MENU (secret) -->
+    <div class="overlay overlay-top" id="screenDev">
+      <div class="overlay-title" style="font-size:26px;">🛠 Dev Menu</div>
+      <div class="overlay-sub">Hidden testing tools — not part of normal play.</div>
+
+      <div class="dev-section">
+        <div class="dev-section-title">Economy</div>
+        <div class="dev-row">
+          <button class="dev-btn" id="devUnlockAll">Unlock All Shop Items</button>
+          <button class="dev-btn" id="devAddCoins">+1000 Coins</button>
+          <button class="dev-btn" id="devAddXP">+500 XP</button>
+        </div>
+      </div>
+
+      <div class="dev-section">
+        <div class="dev-section-title">Wind (live, applies instantly)</div>
+        <label class="dev-label">Speed: <span id="devWindSpeedVal">0</span> mph
+          <input type="range" id="devWindSpeed" min="0" max="35" value="0">
+        </label>
+        <label class="dev-label">Direction: <span id="devWindDirVal">0</span>°
+          <input type="range" id="devWindDir" min="0" max="359" value="0">
+        </label>
+      </div>
+
+      <div class="dev-section">
+        <div class="dev-section-title">Round Tools</div>
+        <div class="dev-row">
+          <button class="dev-btn" id="devWarpGreen">Warp to Green</button>
+          <button class="dev-btn" id="devForceSink">Force Sink</button>
+          <button class="dev-btn" id="devSkipHole">Skip Hole</button>
+        </div>
+      </div>
+
+      <div class="dev-section">
+        <div class="dev-section-title">Danger Zone</div>
+        <div class="dev-row">
+          <button class="dev-btn danger" id="devResetProgress">Reset All Progress</button>
+        </div>
+      </div>
+
+      <div class="overlay-buttons"><button class="btn btn-primary" id="btnDevClose">Close</button></div>
     </div>
 
     <!-- HOLE COMPLETE -->
@@ -452,12 +506,13 @@ const screens = {
   settings: document.getElementById('screenSettings'),
   profile: document.getElementById('screenProfile'),
   shop: document.getElementById('screenShop'),
+  dev: document.getElementById('screenDev'),
   holeComplete: document.getElementById('screenHoleComplete'),
   courseComplete: document.getElementById('screenCourseComplete'),
 };
 const hud = document.querySelector('.hud');
 const shotbar = document.querySelector('.shotbar');
-const MENU_SCREENS = ['home','courseSelect','howto','settings','profile','shop'];
+const MENU_SCREENS = ['home','courseSelect','howto','settings','profile','shop','dev'];
 function showScreen(name){
   Object.values(screens).forEach(s => s.style.display = 'none');
   if (name && screens[name]) screens[name].style.display = 'flex';
@@ -865,6 +920,7 @@ const BOUNDARY_MARGIN = 45; // yards of playable buffer beyond hole geometry, ba
 let currentHole = 0;
 let strokesThisHole = 0, puttsThisHole = 0, firstShotLie = null, greenReachedAtStroke = null;
 let shotHistory = [];
+let activeBoosts = { sandEscape:false, roughCutter:false, steadyHands:false, confidenceBoost:false };
 function pushShotSnapshot(){
   shotHistory.push({ x: ball.x, y: ball.y, strokesThisHole, puttsThisHole, currentLie, greenReachedAtStroke, fairwayHitFlag });
   if (shotHistory.length > 5) shotHistory.shift(); // only ever need the last one or two
@@ -894,10 +950,50 @@ function useCalmWind(){
   updateInventoryTray();
   return true;
 }
+function useSandEscape(){
+  if (invCount('sand_escape') <= 0 || currentLie !== 'bunker' || stage !== 'club') return false;
+  playerProfile.inventory.sand_escape--;
+  saveProfile();
+  activeBoosts.sandEscape = true;
+  flashBanner('CLEAN LIE!', 'pure');
+  updateInventoryTray();
+  return true;
+}
+function useRoughCutter(){
+  if (invCount('rough_cutter') <= 0 || currentLie !== 'rough' || stage !== 'club') return false;
+  playerProfile.inventory.rough_cutter--;
+  saveProfile();
+  activeBoosts.roughCutter = true;
+  flashBanner('CLEAN LIE!', 'pure');
+  updateInventoryTray();
+  return true;
+}
+function useSteadyHands(){
+  if (invCount('steady_hands') <= 0 || stage !== 'club') return false;
+  playerProfile.inventory.steady_hands--;
+  saveProfile();
+  activeBoosts.steadyHands = true;
+  flashBanner('STEADY HANDS', 'pure');
+  updateInventoryTray();
+  return true;
+}
+function useConfidenceBoost(){
+  if (invCount('confidence_boost') <= 0 || stage !== 'club') return false;
+  playerProfile.inventory.confidence_boost--;
+  saveProfile();
+  activeBoosts.confidenceBoost = true;
+  flashBanner('LOCKED IN', 'pure');
+  updateInventoryTray();
+  return true;
+}
 function updateInventoryTray(){
   const items = [];
   if (invCount('mulligan') > 0 && shotHistory.length > 0) items.push('mulligan');
   if (invCount('calm_wind') > 0 && wind.speed > 0.5) items.push('calm_wind');
+  if (invCount('sand_escape') > 0 && currentLie === 'bunker' && stage === 'club') items.push('sand_escape');
+  if (invCount('rough_cutter') > 0 && currentLie === 'rough' && stage === 'club') items.push('rough_cutter');
+  if (invCount('steady_hands') > 0 && stage === 'club' && !activeBoosts.steadyHands) items.push('steady_hands');
+  if (invCount('confidence_boost') > 0 && stage === 'club' && !activeBoosts.confidenceBoost) items.push('confidence_boost');
   invTray.innerHTML = '';
   if (items.length === 0) { invTray.style.display = 'none'; return; }
   invTray.style.display = 'flex';
@@ -909,6 +1005,10 @@ function updateInventoryTray(){
     btn.addEventListener('click', () => {
       if (id === 'mulligan') useMulligan();
       else if (id === 'calm_wind') useCalmWind();
+      else if (id === 'sand_escape') useSandEscape();
+      else if (id === 'rough_cutter') useRoughCutter();
+      else if (id === 'steady_hands') useSteadyHands();
+      else if (id === 'confidence_boost') useConfidenceBoost();
     });
     invTray.appendChild(btn);
   }
@@ -955,8 +1055,8 @@ buildHomeStats();
 function formatRelative(n){ return n===0 ? 'E' : (n>0 ? '+'+n : String(n)); }
 
 /* ============================= PROFILE / XP ============================= */
-let playerProfile = { name:'Player', xp:0, level:1, coins:0, inventory:{}, equippedBall:'classic', equippedShaft:'regular' };
-try { const p = localStorage.getItem('holed2_profile'); if (p!==null) playerProfile = Object.assign({name:'Player',xp:0,level:1,coins:0,inventory:{},equippedBall:'classic',equippedShaft:'regular'}, JSON.parse(p)); } catch(e){}
+let playerProfile = { name:'Player', xp:0, level:1, coins:0, inventory:{}, equippedBall:'classic', equippedShaft:'regular', equippedGrip:'regular' };
+try { const p = localStorage.getItem('holed2_profile'); if (p!==null) playerProfile = Object.assign({name:'Player',xp:0,level:1,coins:0,inventory:{},equippedBall:'classic',equippedShaft:'regular',equippedGrip:'regular'}, JSON.parse(p)); } catch(e){}
 function saveProfile(){ try { localStorage.setItem('holed2_profile', JSON.stringify(playerProfile)); } catch(e){} }
 function xpForLevel(level){ return Math.round(100 + (level-1)*45); } // XP required to clear this level
 function awardXP(amount){
@@ -1035,18 +1135,39 @@ function awardCoins(amount){
 
 /* ============================= SHOP ============================= */
 const SHOP_ITEMS = [
+  // --- consumables ---
   { id:'mulligan', name:'Mulligan', icon:'🔄', price:35, type:'consumable',
     desc:'Instantly retry your last stroke — undo it and hit again, no penalty.' },
   { id:'caddie_notes', name:'Caddie Notes', icon:'📖', price:25, type:'consumable',
     desc:'+1 free Read Putt charge, banked for your next round.' },
   { id:'calm_wind', name:'Calm Wind', icon:'🍃', price:30, type:'consumable',
     desc:'Kills the wind for the rest of the current hole.' },
+  { id:'sand_escape', name:'Sand Escape', icon:'🏖️', price:30, type:'consumable',
+    desc:'Your next shot from a bunker plays a clean lie, as if it were the fairway.' },
+  { id:'rough_cutter', name:'Rough Cutter', icon:'✂️', price:25, type:'consumable',
+    desc:'Your next shot from the rough plays a clean lie, as if it were the fairway.' },
+  { id:'steady_hands', name:'Steady Hands', icon:'🧘', price:20, type:'consumable',
+    desc:'Slows the power/accuracy meter by 50% for your next swing — easier timing.' },
+  { id:'confidence_boost', name:'Confidence Boost', icon:'🍀', price:25, type:'consumable',
+    desc:'Widens the pure-strike zone by 50% for your next swing.' },
+  // --- ball skins ---
   { id:'ball_sunset', name:'Sunset Ball', icon:'🟠', price:80, type:'ball', color:'#ff8a3d',
     desc:'A warm orange finish. Purely for style.' },
   { id:'ball_azure', name:'Azure Ball', icon:'🔵', price:80, type:'ball', color:'#3f9fca',
     desc:'Cool blue — easy to spot sitting in the rough.' },
   { id:'ball_gold', name:'Champion Gold', icon:'🟡', price:150, type:'ball', color:'#dcae5c',
     desc:'A gilded ball for a proven champion.' },
+  { id:'ball_jade', name:'Jade Ball', icon:'🟢', price:80, type:'ball', color:'#2f8f52',
+    desc:'Deep green — blends with the fairway, stands out on the green.' },
+  { id:'ball_crimson', name:'Crimson Ball', icon:'🔴', price:80, type:'ball', color:'#c1443a',
+    desc:'Bold red, impossible to lose in the rough.' },
+  { id:'ball_stealth', name:'Stealth Black', icon:'⚫', price:120, type:'ball', color:'#2a2a2a',
+    desc:'Matte black. Understated, and a little intimidating.' },
+  { id:'ball_lime', name:'Neon Lime', icon:'🟩', price:120, type:'ball', color:'#c6e02f',
+    desc:'Loud, bright, and easy to track against any course.' },
+  { id:'ball_prism', name:'Prismatic', icon:'💠', price:250, type:'ball', color:'#b98ce0',
+    desc:'A shimmering finish reserved for the highest rollers.' },
+  // --- shafts (power vs accuracy tradeoff, applies to the whole bag) ---
   { id:'shaft_stiff', name:'Stiff Shaft', icon:'🎯', price:90, type:'shaft', powerMult:1.08, curveMult:1.30, windMult:1.0,
     desc:'+8% distance on every club. Mishits curve noticeably more.' },
   { id:'shaft_xstiff', name:'Extra Stiff Shaft', icon:'💪', price:170, type:'shaft', powerMult:1.15, curveMult:1.60, windMult:1.0,
@@ -1055,11 +1176,25 @@ const SHOP_ITEMS = [
     desc:'Trades 8% distance for a much straighter miss. Great for taming a big curve.' },
   { id:'shaft_lowspin', name:'Low-Spin Tour Shaft', icon:'🌬️', price:130, type:'shaft', powerMult:1.0, curveMult:1.15, windMult:0.70,
     desc:'Flies under the wind — 30% less wind drift, at a small accuracy cost.' },
+  { id:'shaft_whippy', name:'Whippy Flex', icon:'🎋', price:60, type:'shaft', powerMult:0.85, curveMult:0.50, windMult:1.0,
+    desc:'Very short, but extremely forgiving — half the usual curve on a bad miss.' },
+  { id:'shaft_heavy', name:'Heavy Power Shaft', icon:'🔨', price:220, type:'shaft', powerMult:1.20, curveMult:1.90, windMult:1.15,
+    desc:'The biggest distance gain in the shop, and the most punishing. Also catches more wind.' },
+  { id:'shaft_tourblade', name:'Tour Blade', icon:'🗡️', price:200, type:'shaft', powerMult:1.03, curveMult:0.95, windMult:1.0,
+    desc:'A refined all-rounder — a small gain in both distance and accuracy, no real downside, at a premium price.' },
+  // --- grips (widen the accuracy sweet-zone; a pure forgiveness upgrade, no tradeoff) ---
+  { id:'grip_tacky', name:'Tacky Grip', icon:'🤝', price:60, type:'grip', sweetMult:1.15,
+    desc:'A firmer hold on the club. Widens the pure-strike zone by 15%.' },
+  { id:'grip_cushion', name:'Cushion Grip', icon:'🧤', price:110, type:'grip', sweetMult:1.30,
+    desc:'Extra padding smooths out your timing. Widens the pure-strike zone by 30%.' },
+  { id:'grip_tourwrap', name:'Tour Wrap', icon:'🎀', price:170, type:'grip', sweetMult:1.50,
+    desc:'The most forgiving grip money can buy. Widens the pure-strike zone by 50%.' },
 ];
 function shopItemById(id){ return SHOP_ITEMS.find(i => i.id === id); }
 function invCount(id){ return (playerProfile.inventory && playerProfile.inventory[id]) || 0; }
 function ownsBall(id){ return id === 'classic' || invCount(id) > 0; }
 function ownsShaft(id){ return id === 'regular' || invCount(id) > 0; }
+function ownsGrip(id){ return id === 'regular' || invCount(id) > 0; }
 function ballColor(id){
   if (id === 'classic' || !id) return '#ffffff';
   const item = shopItemById(id);
@@ -1072,15 +1207,22 @@ function equippedShaftStats(){
   return item ? { id, name:item.name, powerMult:item.powerMult, curveMult:item.curveMult, windMult:item.windMult }
                : { id:'regular', name:'Regular Flex', powerMult:1, curveMult:1, windMult:1 };
 }
+function equippedGripStats(){
+  const id = playerProfile.equippedGrip || 'regular';
+  if (id === 'regular') return { id:'regular', name:'Regular Grip', sweetMult:1 };
+  const item = shopItemById(id);
+  return item ? { id, name:item.name, sweetMult:item.sweetMult } : { id:'regular', name:'Regular Grip', sweetMult:1 };
+}
 function buyItem(id){
   const item = shopItemById(id);
   if (!item) return false;
-  if ((item.type === 'ball' && ownsBall(id)) || (item.type === 'shaft' && ownsShaft(id))) return false; // already owned, nothing to buy
+  if ((item.type === 'ball' && ownsBall(id)) || (item.type === 'shaft' && ownsShaft(id)) || (item.type === 'grip' && ownsGrip(id))) return false; // already owned
   if (playerProfile.coins < item.price) return false;
   playerProfile.coins -= item.price;
   playerProfile.inventory[id] = (playerProfile.inventory[id] || 0) + 1;
   if (item.type === 'ball') playerProfile.equippedBall = id; // auto-equip a newly bought skin
   if (item.type === 'shaft') playerProfile.equippedShaft = id; // auto-equip a newly bought shaft
+  if (item.type === 'grip') playerProfile.equippedGrip = id; // auto-equip a newly bought grip
   saveProfile();
   updateProfileUI();
   updateShotBar();
@@ -1096,6 +1238,13 @@ function equipBall(id){
 function equipShaft(id){
   if (!ownsShaft(id)) return;
   playerProfile.equippedShaft = id;
+  saveProfile();
+  buildShop();
+  updateShotBar();
+}
+function equipGrip(id){
+  if (!ownsGrip(id)) return;
+  playerProfile.equippedGrip = id;
   saveProfile();
   buildShop();
   updateShotBar();
@@ -1222,6 +1371,7 @@ function loadHole(i){
   strokesThisHole = 0; puttsThisHole = 0; firstShotLie = null; greenReachedAtStroke = null;
   fairwayHitFlag = null;
   shotHistory = [];
+  activeBoosts = { sandEscape:false, roughCutter:false, steadyHands:false, confidenceBoost:false };
   ball.x = h.tee.x; ball.y = h.tee.y; ball.vx = 0; ball.vy = 0;
   currentLie = 'tee';
   particles = []; splashes = []; sinkAnim = 0; sunkFlag = false;
@@ -1263,13 +1413,17 @@ function updateShotBar(){
   const arrow = windArrowChar(wind.dir);
   shotWind.innerHTML = 'Wind: <b>'+Math.round(wind.speed)+' mph '+arrow+'</b>';
   const shaft = equippedShaftStats();
+  const grip = equippedGripStats();
   const shotShaft = document.getElementById('shotShaft');
-  if (shaft.id === 'regular') {
+  const gearLabels = [];
+  if (shaft.id !== 'regular') gearLabels.push(shaft.name);
+  if (grip.id !== 'regular') gearLabels.push(grip.name);
+  if (gearLabels.length === 0) {
     shotShaft.style.display = 'none';
   } else {
     shotShaft.style.display = 'inline-flex';
     shotShaft.className = 'shaft-chip' + (shaft.powerMult < 1 || shaft.windMult < 1 ? ' control' : '');
-    shotShaft.textContent = '🏌 ' + shaft.name;
+    shotShaft.textContent = '🏌 ' + gearLabels.join(' · ');
   }
 }
 function windArrowChar(deg){
@@ -1332,7 +1486,9 @@ function enterAccuracyStage(){
   meterFill.style.background = 'rgba(23,53,42,.06)';
   meterSweet.style.display = 'block';
   const lie = currentLie;
-  const sweetWidth = lie==='rough' ? 14 : (lie==='bunker' ? 10 : 22); // % width of the pure zone
+  const baseSweet = lie==='rough' ? 14 : (lie==='bunker' ? 10 : 22); // % width of the pure zone
+  const grip = equippedGripStats();
+  const sweetWidth = Math.min(42, baseSweet * grip.sweetMult * (activeBoosts.confidenceBoost ? 1.5 : 1));
   meterSweet.style.left = (50 - sweetWidth/2)+'%';
   meterSweet.style.width = sweetWidth+'%';
   meterNeedle.style.display = 'block';
@@ -1380,22 +1536,23 @@ document.getElementById('btnSwing').addEventListener('click', () => { if (stage=
 /* meter oscillation */
 let meterStartTime = 0;
 const METER_PERIOD = 1000; // ms for a full 0->100->0 sweep
+function currentMeterPeriod(base){ return activeBoosts.steadyHands ? base * 1.5 : base; }
 function triangleWave(t, period){
   const phase = (t % period) / period;
   return phase < 0.5 ? phase*2 : (1-phase)*2;
 }
 function updateMeters(now){
   if (stage === 'power') {
-    const v = triangleWave(now - meterStartTime, METER_PERIOD) * 100;
+    const v = triangleWave(now - meterStartTime, currentMeterPeriod(METER_PERIOD)) * 100;
     meterFill.style.width = v.toFixed(1)+'%';
   } else if (stage === 'accuracy') {
-    const v = triangleWave(now - meterStartTime, METER_PERIOD*0.72); // slightly faster for tension
+    const v = triangleWave(now - meterStartTime, currentMeterPeriod(METER_PERIOD*0.72)); // slightly faster for tension
     meterNeedle.style.left = (v*100).toFixed(1)+'%';
   }
 }
 function currentMeterValue(now){
-  if (stage === 'power') return triangleWave(now - meterStartTime, METER_PERIOD) * 100;
-  if (stage === 'accuracy') return triangleWave(now - meterStartTime, METER_PERIOD*0.72);
+  if (stage === 'power') return triangleWave(now - meterStartTime, currentMeterPeriod(METER_PERIOD)) * 100;
+  if (stage === 'accuracy') return triangleWave(now - meterStartTime, currentMeterPeriod(METER_PERIOD*0.72));
   return 0;
 }
 
@@ -1419,10 +1576,15 @@ function executeApproachShot(){
   const isTeeShot = strokesThisHole === 0;
   if (isTeeShot) firstShotLie = 'tee';
   pushShotSnapshot();
+  const effectiveLie = (activeBoosts.sandEscape && currentLie === 'bunker') ? 'fairway'
+    : (activeBoosts.roughCutter && currentLie === 'rough') ? 'fairway'
+    : currentLie;
   const shot = computeApproachShot({
     club: selectedClub, powerPct: pendingPower, missAmount: pendingMiss,
-    aimAngleDeg, lie: currentLie, wind, holeYards: h.yards, elevationYd: h.elevation,
+    aimAngleDeg, lie: effectiveLie, wind, holeYards: h.yards, elevationYd: h.elevation,
   });
+  activeBoosts.sandEscape = false; activeBoosts.roughCutter = false;
+  activeBoosts.steadyHands = false; activeBoosts.confidenceBoost = false;
   strokesThisHole++;
   updateHud();
   meterPanel.style.display = 'none';
@@ -2121,6 +2283,11 @@ document.getElementById('profileNameInput').addEventListener('keydown', (e) => {
 });
 let shopReturnTo = 'home';
 let shopActiveTab = 'consumable';
+const EQUIPPABLE = {
+  ball: { owns: ownsBall, equippedId: () => playerProfile.equippedBall },
+  shaft: { owns: ownsShaft, equippedId: () => playerProfile.equippedShaft },
+  grip: { owns: ownsGrip, equippedId: () => playerProfile.equippedGrip },
+};
 function buildShop(){
   document.getElementById('shopCoinBalance').textContent = '🪙 ' + playerProfile.coins;
   const grid = document.getElementById('shopGrid');
@@ -2133,13 +2300,10 @@ function buildShop(){
     let visual = '<div class="icon">'+item.icon+'</div>';
     if (item.type === 'ball') visual = '<div class="swatch" style="background:'+item.color+';"></div>';
     let btnHtml;
-    if (item.type === 'ball') {
-      if (playerProfile.equippedBall === item.id) btnHtml = '<div class="shop-buy equipped">Equipped</div>';
-      else if (ownsBall(item.id)) btnHtml = '<button class="shop-buy owned" data-action="equip" data-id="'+item.id+'">Equip</button>';
-      else btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
-    } else if (item.type === 'shaft') {
-      if (playerProfile.equippedShaft === item.id) btnHtml = '<div class="shop-buy equipped">Equipped</div>';
-      else if (ownsShaft(item.id)) btnHtml = '<button class="shop-buy owned" data-action="equip" data-id="'+item.id+'">Equip</button>';
+    const eq = EQUIPPABLE[item.type];
+    if (eq) {
+      if (eq.equippedId() === item.id) btnHtml = '<div class="shop-buy equipped">Equipped</div>';
+      else if (eq.owns(item.id)) btnHtml = '<button class="shop-buy owned" data-action="equip" data-id="'+item.id+'">Equip</button>';
       else btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
     } else {
       btnHtml = '<button class="shop-buy'+(playerProfile.coins<item.price?' cant-afford':'')+'" data-action="buy" data-id="'+item.id+'">Buy · 🪙'+item.price+'</button>';
@@ -2161,7 +2325,9 @@ document.getElementById('shopGrid').addEventListener('click', (e) => {
     if (buyItem(id)) { soundClick(); flashBanner('PURCHASED!', 'pure'); }
   } else if (btn.dataset.action === 'equip') {
     const item = shopItemById(id);
-    if (item && item.type === 'shaft') equipShaft(id); else equipBall(id);
+    if (item && item.type === 'shaft') equipShaft(id);
+    else if (item && item.type === 'grip') equipGrip(id);
+    else equipBall(id);
     soundClick();
   }
 });
@@ -2177,6 +2343,79 @@ document.getElementById('btnShopBack').addEventListener('click', () => showScree
 document.getElementById('btnRestartHole').addEventListener('click', restartHole);
 document.getElementById('btnPlayAgain').addEventListener('click', () => { buildCourseSelect(); showScreen('courseSelect'); });
 document.getElementById('btnCourseHome').addEventListener('click', () => showScreen('home'));
+
+/* ============================= SECRET DEV MENU ============================= */
+// Trigger 1: type "devmode" anywhere (ignored while typing in a text field)
+let devKeyBuffer = '';
+window.addEventListener('keydown', (e) => {
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key.length !== 1) return;
+  devKeyBuffer = (devKeyBuffer + e.key.toLowerCase()).slice(-7);
+  if (devKeyBuffer === 'devmode') { devKeyBuffer = ''; openDevMenu(); }
+});
+// Trigger 2: tap the home-screen logo 7 times within 3 seconds (mobile-friendly)
+let devTapCount = 0, devTapTimer = null;
+document.getElementById('homeBrand').addEventListener('click', () => {
+  devTapCount++;
+  clearTimeout(devTapTimer);
+  devTapTimer = setTimeout(() => { devTapCount = 0; }, 3000);
+  if (devTapCount >= 7) { devTapCount = 0; openDevMenu(); }
+});
+function openDevMenu(){
+  soundClick();
+  document.getElementById('devWindSpeed').value = Math.round(wind.speed);
+  document.getElementById('devWindSpeedVal').textContent = Math.round(wind.speed);
+  document.getElementById('devWindDir').value = Math.round(wind.dir);
+  document.getElementById('devWindDirVal').textContent = Math.round(wind.dir);
+  showScreen('dev');
+}
+document.getElementById('btnDevClose').addEventListener('click', () => showScreen(null));
+document.getElementById('devUnlockAll').addEventListener('click', () => {
+  for (const item of SHOP_ITEMS) {
+    if (item.type === 'consumable') playerProfile.inventory[item.id] = Math.max(playerProfile.inventory[item.id] || 0, 99);
+    else playerProfile.inventory[item.id] = Math.max(playerProfile.inventory[item.id] || 0, 1);
+  }
+  saveProfile();
+  updateProfileUI();
+  buildShop();
+  flashBanner('ALL UNLOCKED', 'pure');
+});
+document.getElementById('devAddCoins').addEventListener('click', () => { awardCoins(1000); flashBanner('+1000 COINS', 'pure'); });
+document.getElementById('devAddXP').addEventListener('click', () => { awardXP(500); flashBanner('+500 XP', 'pure'); });
+document.getElementById('devWindSpeed').addEventListener('input', (e) => {
+  wind.speed = parseFloat(e.target.value);
+  document.getElementById('devWindSpeedVal').textContent = e.target.value;
+  updateShotBar();
+});
+document.getElementById('devWindDir').addEventListener('input', (e) => {
+  wind.dir = parseFloat(e.target.value);
+  document.getElementById('devWindDirVal').textContent = e.target.value;
+  updateShotBar();
+});
+document.getElementById('devWarpGreen').addEventListener('click', () => {
+  const h = HOLES[currentHole];
+  ball.x = h.green.x; ball.y = h.green.y - (h.green.r*0.6); ball.vx = 0; ball.vy = 0;
+  flight = null;
+  currentLie = 'green';
+  showScreen(null);
+  enterPuttStage();
+  flashBanner('WARPED', 'pure');
+});
+document.getElementById('devForceSink').addEventListener('click', () => {
+  showScreen(null);
+  handleSunk();
+});
+document.getElementById('devSkipHole').addEventListener('click', () => {
+  showScreen(null);
+  if (scorecard[currentHole] === null) scorecard[currentHole] = HOLES[currentHole].par; // log a par so the scorecard stays coherent
+  goNext();
+});
+document.getElementById('devResetProgress').addEventListener('click', () => {
+  if (!confirm('Reset ALL progress (profile, coins, inventory, career stats, bests)? This cannot be undone.')) return;
+  ['holed2_profile','holed2_career','holed2_bests','holed2_volume'].forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+  location.reload();
+});
 
 loadHole(0);
 showScreen('home');
